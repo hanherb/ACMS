@@ -1,0 +1,15 @@
+var mongo = require('./config/mongo-connect');
+
+mongo.mongoConnect("action goes here", "query goes here", function(response){
+	"response goes here"
+});
+
+---------------------------
+
+list of actions :
+- find
+- insert-one
+- update-one
+- delete-one
+- find-query
+- session

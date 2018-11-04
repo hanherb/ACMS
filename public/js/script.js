@@ -48,7 +48,7 @@ function loginUser() {
     }
     else {
         $.get('/login-user', { email: email, password: password }, function (data) {
-            if (data[0]) {
+            if (data) {
                 alert("Login Success");
                 window.location.replace("http://localhost:3000/index.html");
             }
@@ -187,19 +187,19 @@ function createUser() {
     var cbCreate;
     var cbUpdate;
     var cbDelete;
-    if ($('.cb #cb-read').is(':checked'))
+    if ($('.cb1 #cb-read').is(':checked'))
         cbRead = 1;
     else
         cbRead = 0;
-    if ($('.cb #cb-create').is(':checked'))
+    if ($('.cb1 #cb-create').is(':checked'))
         cbCreate = 1;
     else
         cbCreate = 0;
-    if ($('.cb #cb-update').is(':checked'))
+    if ($('.cb1 #cb-update').is(':checked'))
         cbUpdate = 1;
     else
         cbUpdate = 0;
-    if ($('.cb #cb-delete').is(':checked'))
+    if ($('.cb1 #cb-delete').is(':checked'))
         cbDelete = 1;
     else
         cbDelete = 0;
@@ -228,6 +228,7 @@ function createUser() {
     }
 }
 //--
+//delete user data dari dashboard.html
 function deleteUser() {
     var email = $('#delete-email').html();
     $.get('/delete-user', { email: email }, function (data) {
@@ -240,3 +241,4 @@ function deleteUser() {
         }
     });
 }
+//--

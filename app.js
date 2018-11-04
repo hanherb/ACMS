@@ -2,20 +2,7 @@ var express = require('express');
 var app = express();
 var session = require('express-session');
 var mongodb = require('mongodb');
-
-//MongoDB setup and check
-var MongoClient = mongodb.MongoClient;
-var mongourl = 'mongodb://localhost:27017/';
-
-MongoClient.connect(mongourl, function(err, db) {
-	if(err) {
-		console.log("Error: ", err);
-	}
-	else {
-		console.log("Connection Established");
-	}
-});
-//--
+var mongo = require('./config/mongo-connect');
 
 app.use(session({secret: 'kuda'}));
 
@@ -25,20 +12,8 @@ app.get('/', function(req, res, next) {
 
 //mengambil data dari collection user untuk ditampilkan di dashboard.html
 app.get('/get-user', function(req, res, next) {
-	MongoClient.connect(mongourl, function(err, db) {
-		if(err) {
-			console.log("Error: ", err);
-		}
-		else {
-			console.log("Connection Established");
-			var dbo = db.db("kliling");
-			dbo.collection("user").find({}).toArray(function(err, result) {
-				if (err) throw err;
-				console.log(result);
-			    res.json(result);
-		    	db.close();
-		  	});
-		}
+	mongo.mongoConnect("find", {}, function(response) {
+		res.json(response);
 	});
 });
 //--
@@ -57,79 +32,38 @@ app.get('/register-user', function(req, res, next) {
 		}
 		
 	}
-	MongoClient.connect(mongourl, function(err, db) {
-		if(err) {
-			console.log("Error: ", err);
-		}
-		else {
-			console.log("Connection Established");
-			var dbo = db.db("kliling");
-			dbo.collection("user").insertOne(obj, function(err, result) {
-				if (err) throw err;
-			    res.json(result.insertedCount);
-		    	db.close();
-		  	});
-		}
+	mongo.mongoConnect("insert-one", obj, function(response) {
+		res.json(response.insertedCount);
 	});
 });
 
 app.get('/login-user', function(req, res, next) {
-	MongoClient.connect(mongourl, function(err, db) {
-		if(err) {
-			console.log("Error: ", err);
+	var query = {email: req.query.email, password: req.query.password};
+	mongo.mongoConnect("find-query", query, function(response) {
+		if(response[0]) {
+			req.session.email = response[0].email;
+			req.session.fullname = response[0].fullname;
+			req.session.role = response[0].role;
+			req.session.authority = response[0].authority;
+			res.json(response[0]);
 		}
 		else {
-			console.log("Connection Established");
-			var dbo = db.db("kliling");
-			var query = {email: req.query.email, password: req.query.password};
-			dbo.collection("user").find(query).toArray(function(err, result) {
-				if (err) throw err;
-				if(result[0]) {
-					req.session.email = result[0].email;
-					req.session.fullname = result[0].fullname;
-					req.session.role = result[0].role;
-					req.session.authority = result[0].authority;
-				}
-			    res.json(result);
-		    	db.close();
-		  	});
+			res.json("Login error");
 		}
 	});
 });
 
 app.get('/update-user-form', function(req, res, next) {
-	MongoClient.connect(mongourl, function(err, db) {
-		if(err) {
-			console.log("Error: ", err);
-		}
-		else {
-			console.log("Connection Established");
-			var dbo = db.db("kliling");
-			var query = {email: req.query.email};
-			dbo.collection("user").find(query).toArray(function(err, result) {
-				if (err) throw err;
-			    res.json(result);
-		    	db.close();
-		  	});
-		}
+	var query = {email: req.query.email};
+	mongo.mongoConnect("find-query", query, function(response) {
+		res.json(response);
 	});
 });
 
 app.get('/delete-user-form', function(req, res, next) {
-	MongoClient.connect(mongourl, function(err, db) {
-		if(err) {
-			console.log("Error: ", err);
-		}
-		else {
-			console.log("Connection Established");
-			var dbo = db.db("kliling");
-			var query = {email: req.query.email};
-			dbo.collection("user").find(query).toArray(function(err, result) {
-				if (err) throw err;
-			    res.json(result);
-		    	db.close();
-		  	});
-		}
+	var query = {email: req.query.email};
+	mongo.mongoConnect("find-query", query, function(response) {
+		res.json(response);
 	});
 });
 
@@ -141,81 +75,36 @@ app.get('/create-user', function(req, res, next) {
 		role: req.query.role,
 		authority: req.query.authority
 	}
+	console.log(obj.authority);
 
-	MongoClient.connect(mongourl, function(err, db) {
-		if(err) {
-			console.log("Error: ", err);
-		}
-		else {
-			console.log("Connection Established");
-			var dbo = db.db("kliling");
-			dbo.collection("user").insertOne(obj, function(err, result) {
-				if (err) throw err;
-			    res.json(result.insertedCount);
-		    	db.close();
-		  	});
-		}
+	mongo.mongoConnect("insert-one", obj, function(response) {
+		res.json(response.insertedCount);
 	});
 });
 
 app.get('/update-user', function(req, res, next) {
-	MongoClient.connect(mongourl, function(err, db) {
-		if(err) {
-			console.log("Error: ", err);
-		}
-		else {
-			console.log("Connection Established");
-			var dbo = db.db("kliling");
-			var query = {email: req.query.email};
-			var value = {$set: {fullname: req.query.fullname, role: req.query.role, authority: req.query.authority}};
-			dbo.collection("user").updateOne(query, value, function(err, result) {
-				if (err) throw err;
-			    res.json(result);
-		    	db.close();
-		  	});
-		}
+	var query = [{email: req.query.email}, {$set: {fullname: req.query.fullname, role: req.query.role, authority: req.query.authority}}];
+	mongo.mongoConnect("update-one", query, function(response) {
+		res.json(response);
 	});
 });
 
 app.get('/delete-user', function(req, res, next) {
-	MongoClient.connect(mongourl, function(err, db) {
-		if(err) {
-			console.log("Error: ", err);
-		}
-		else {
-			console.log("Connection Established");
-			var dbo = db.db("kliling");
-			var query = {email: req.query.email};
-			dbo.collection("user").deleteOne(query, function(err, result) {
-				if (err) throw err;
-				console.log(result);
-			    res.json(result);
-		    	db.close();
-		  	});
-		}
+	var query = {email: req.query.email};
+	mongo.mongoConnect("delete-one", query, function(response) {
+		res.json(response);
 	});
 });
 
 app.get('/check-session', function(req, res, next) {
 	if(req.session.email) {
-		MongoClient.connect(mongourl, function(err, db) {
-			if(err) {
-				console.log("Error: ", err);
-			}
-			else {
-				console.log("Connection Established");
-				var dbo = db.db("kliling");
-				var query = {email: req.session.email};
-				dbo.collection("user").find(query).toArray(function(err, result) {
-					if (err) throw err;
-					if(result[0]) {
-						req.session.email = result[0].email;
-						req.session.fullname = result[0].fullname;
-						req.session.role = result[0].role;
-						req.session.authority = result[0].authority;
-					}
-			    	db.close();
-			  	});
+		var query = {email: req.session.email};
+		mongo.mongoConnect("session", query, function(response) {
+			if(response) {
+				req.session.email = response[0].email;
+				req.session.fullname = response[0].fullname;
+				req.session.role = response[0].role;
+				req.session.authority = response[0].authority;
 			}
 		});
 		res.json(req.session);
