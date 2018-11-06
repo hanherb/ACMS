@@ -3,6 +3,7 @@ var app = express();
 var session = require('express-session');
 var mongodb = require('mongodb');
 var mongo = require('./config/mongo-connect');
+var fs = require('fs');
 
 app.use(session({secret: 'kuda'}));
 
@@ -12,7 +13,7 @@ app.get('/', function(req, res, next) {
 
 //mengambil data dari collection user untuk ditampilkan di dashboard.html
 app.get('/get-user', function(req, res, next) {
-	mongo.mongoConnect("find", {}, function(response) {
+	mongo.mongoUser("find", {}, function(response) {
 		res.json(response);
 	});
 });
@@ -32,14 +33,14 @@ app.get('/register-user', function(req, res, next) {
 		}
 		
 	}
-	mongo.mongoConnect("insert-one", obj, function(response) {
+	mongo.mongoUser("insert-one", obj, function(response) {
 		res.json(response.insertedCount);
 	});
 });
 
 app.get('/login-user', function(req, res, next) {
 	var query = {email: req.query.email, password: req.query.password};
-	mongo.mongoConnect("find-query", query, function(response) {
+	mongo.mongoUser("find-query", query, function(response) {
 		if(response[0]) {
 			req.session.email = response[0].email;
 			req.session.fullname = response[0].fullname;
@@ -55,14 +56,14 @@ app.get('/login-user', function(req, res, next) {
 
 app.get('/update-user-form', function(req, res, next) {
 	var query = {email: req.query.email};
-	mongo.mongoConnect("find-query", query, function(response) {
+	mongo.mongoUser("find-query", query, function(response) {
 		res.json(response);
 	});
 });
 
 app.get('/delete-user-form', function(req, res, next) {
 	var query = {email: req.query.email};
-	mongo.mongoConnect("find-query", query, function(response) {
+	mongo.mongoUser("find-query", query, function(response) {
 		res.json(response);
 	});
 });
@@ -77,21 +78,21 @@ app.get('/create-user', function(req, res, next) {
 	}
 	console.log(obj.authority);
 
-	mongo.mongoConnect("insert-one", obj, function(response) {
+	mongo.mongoUser("insert-one", obj, function(response) {
 		res.json(response.insertedCount);
 	});
 });
 
 app.get('/update-user', function(req, res, next) {
 	var query = [{email: req.query.email}, {$set: {fullname: req.query.fullname, role: req.query.role, authority: req.query.authority}}];
-	mongo.mongoConnect("update-one", query, function(response) {
+	mongo.mongoUser("update-one", query, function(response) {
 		res.json(response);
 	});
 });
 
 app.get('/delete-user', function(req, res, next) {
 	var query = {email: req.query.email};
-	mongo.mongoConnect("delete-one", query, function(response) {
+	mongo.mongoUser("delete-one", query, function(response) {
 		res.json(response);
 	});
 });
@@ -99,7 +100,7 @@ app.get('/delete-user', function(req, res, next) {
 app.get('/check-session', function(req, res, next) {
 	if(req.session.email) {
 		var query = {email: req.session.email};
-		mongo.mongoConnect("session", query, function(response) {
+		mongo.mongoUser("session", query, function(response) {
 			if(response) {
 				req.session.email = response[0].email;
 				req.session.fullname = response[0].fullname;
@@ -112,6 +113,37 @@ app.get('/check-session', function(req, res, next) {
 	else {
 		res.json("no session");
 	}
+});
+
+app.get('/list-plugin', function(req, res, next) {
+	var folder = __dirname + '/plugin/';
+	var temp = [];
+	fs.readdir(folder, (err, files) => {
+		files.forEach(file => {
+			if(file.substr(-3) == '.js')
+	 			temp.push(file.slice(0, -3));
+  		});
+  		res.json(temp);
+	})
+});
+
+app.get('/get-plugin', function(req, res, next) {
+	var plugin = req.query.plugin;
+	var query = {};
+	mongo.mongoPlugin("find", query, function(response) {
+		res.json(response);
+	});
+});
+
+app.get('/add-plugin', function(req, res, next) {
+	var plugin = req.query.plugin;
+	for(var i = 0; i < plugin.name.length; i++) {
+		var query = [{name: plugin.name[i]}, {$set: {name: plugin.name[i], status: plugin.status[i]}}, {upsert: true}];
+		mongo.mongoPlugin("update", query, function(response) {
+			
+		});
+	}
+	res.json(1);
 });
 
 app.get('/logout', function(req, res, next) {

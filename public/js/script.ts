@@ -1,7 +1,7 @@
 // menampilkan ke #tableUser di dashboard.html
 function getUser() {
 	$.get('/get-user', {}, function(data) {
-		for(var i = 0; i < data.length; i++) {
+		for(let i = 0; i < data.length; i++) {
 			
 			let fullname: string = data[i].fullname;
 			let email: string = data[i].email;
@@ -257,6 +257,77 @@ function deleteUser(){
 		}
 		else {
 			alert("Delete Error");
+		}
+	});
+}
+//--
+
+//setting plugin navbar
+function navPlugin() {
+	$.get('/get-plugin', {}, function(data) {
+		console.log(data);
+		for(let i = 0; i < data.length; i++) {
+			if(data[i].status == 1){
+				$('.plugin-nav').append('<li><a href="#">'+data[i].name+'</a></li>');
+			}
+		}
+	});
+}
+//--
+
+//setting plugin list
+function listPlugin() {
+	$.get('/list-plugin', {}, function(data) {
+		for(let i = 0; i < data.length; i++) {
+			$('#plugin-list').append('<div class="checkbox cb-'+data[i]+'">'+
+  				'<label><input type="checkbox" id="'+data[i]+'">'+data[i]+'</label>'+
+			'</div>');
+		}
+	});
+}
+//--
+
+function getPlugin() {
+	$.get('/get-plugin', {}, function(data) {
+		for(let i = 0; i < data.length; i++) {
+			$('#plugin-list').find('.checkbox input').each(function(){
+				if(data[i].name == this.id) {
+					if(data[i].status == 1) {
+						$(this).prop('checked', true);
+					}
+					else {
+						$(this).prop('checked', false);
+					}
+				}
+			});
+		}
+	});
+}
+
+//tambah plugin
+function addPlugin() {
+	let plugin = {
+		'name': [],
+		'status': []
+	};
+	$('#plugin-list').find('.checkbox input').each(function(){
+		if($(this).is(':checked')) {
+			plugin.name.push(this.id);
+			plugin.status.push(1);
+		}
+		else {
+			plugin.name.push(this.id);
+			plugin.status.push(0);
+		}
+	});
+
+	$.get('/add-plugin', {plugin: plugin}, function(data) {
+		if(data == 1) {
+			alert("Plugin Updated");
+			window.location.replace("http://localhost:3000/add-plugin.html");
+		}
+		else {
+			alert("Something went wrong");
 		}
 	});
 }

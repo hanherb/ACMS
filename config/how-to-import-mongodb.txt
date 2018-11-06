@@ -2,6 +2,12 @@ HOW TO IMPORT DB:
 
 1. Open CMD
 2. Go to bin directory in MongoDB. Example: D:\MongoDB\bin
-3. type this: mongoimport --db kliling --collection user --file kliling.json
+3. type this: mongoimport --db acms --collection user --file user.json
 
 notes: make sure to place kliling.json in MongoDB\bin directory.
+
+HOW TO EXPORT DB:
+
+1. Open CMD
+2. Go to bin directory in MongoDB. Example: D:\MongoDB\bin
+3. type this: mongoexport --db acms --collection user --out user.json

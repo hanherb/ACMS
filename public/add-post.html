@@ -30,29 +30,28 @@
 		  	</div>
 		</nav>
 		<div class="container">
-			<div class="row">
-				<!-- home content -->
-				<div class="col-md-10 col-md-offset-5">
-					<div class="home-content">
-						<h1>ACMS</h1>
-						<button class="btn btn-primary no-session" id="btn-login-page">Login</button>
-						<button class="btn btn-primary no-session" id="btn-register-page">Register</button>
-						<p class="session">Welcome, <span></span></p>
-					</div>
-				</div>
-				<!-- /home content -->
-			</div>
-		</div>
+      		<div class="row">
+	        	<div class="col-lg-8 col-md-10 col-md-offset-2 mx-auto">
+	          		<div class="form-post">
+	            		<div class="form-group col-md-12">
+					    	<label>Title:</label>
+					    	<input type="text" class="form-control" id="post-title">
+					  	</div>
+					  	<div class="row">
+				  		</div>
+					  	<div class="form-group col-md-12">
+					    	<label>Content:</label>
+					    	<textarea class="form-control" rows="16" id="post-content"></textarea>
+					  	</div>
+	          		</div>
+	          		<button class="btn btn-primary" href="#">Confirm Post</button>
+	        	</div>
+	      	</div>
+	    </div>
 		<script type="text/javascript">
 			$(document).ready(function() {
 			    checkSession();
 			    navPlugin();
-			});
-			$('#btn-login-page').click(function() {
-				window.location.replace("http://localhost:3000/login.html");
-			});
-			$('#btn-register-page').click(function() {
-				window.location.replace("http://localhost:3000/register.html");
 			});
 		</script>
 	</body>

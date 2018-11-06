@@ -6,16 +6,25 @@
 		<script type="text/javascript" src="/js/jquery.js"></script>
 	 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 	 	<script type="text/javascript" src="/js/script.js"></script>
-		<title>KLILING</title>
+		<title>ACMS</title>
 	</head>
 	<body>
 		<nav class="navbar navbar-inverse">
 	  		<div class="container-fluid">
 		    	<div class="navbar-header">
-		      		<a class="navbar-brand" href="/index.html">KLILING</a>
+		      		<a class="navbar-brand" href="/index.html">ACMS</a>
 		    	</div>
 		    	<ul class="nav navbar-nav">
-		      		<li class="admin-session" style="display: none"><a href="#">Dashboard</a></li>
+		      		<li class="admin-session" style="display: none"><a href="/dashboard.html">Dashboard</a></li>
+		      		<li class="dropdown">
+			        	<a class="dropdown-toggle admin-session" style="display: none" data-toggle="dropdown" href="#">Plugins
+			        		<span class="caret"></span>
+			        	</a>
+			        	<ul class="dropdown-menu plugin-nav">
+			          		<li><a href="add-plugin.html">Add Plugin</a></li>
+			          		<li role="separator" class="divider"></li>
+			        	</ul>
+			      	</li>
 		      		<li class="session"><a href="/logout">Logout</a></li>
 		    	</ul>
 		  	</div>
@@ -200,6 +209,7 @@
 			$( document ).ready(function() {
 			    getUser();
 			    checkSession();
+			    navPlugin();
 			});
 			$('#btn-confirm-update').click(function() {
 				updateUser();
