@@ -5,6 +5,55 @@ var mongodb = require('mongodb');
 var mongo = require('./config/mongo-connect');
 var fs = require('fs');
 
+//GraphQL start here ------
+
+// var express_graphql = require('express-graphql');
+// var {buildSchema} = require('graphql');
+
+// var schema = buildSchema(`
+// 	type Query {
+// 		user(id: String): User,
+// 		kuda(nama: String): String
+// 	},
+
+// 	type User {
+// 		_id: Int,
+// 		fullname: String,
+// 		email: String,
+// 		role: String,
+// 		authority: [Int]
+// 	}
+// `);
+// var data = [];
+// mongo.mongoUser("find", {}, function(response) {
+// 	data.push(response);
+// 	console.log(data);
+// });
+
+// var getUser = function(args) {
+// 	var id = args.id;
+// 	for(var i = 0; i < data.length; i++) {
+// 		if(id = data[i].fullname)
+// 			return data[i].email;
+// 	}
+// }
+
+// var root = {
+// 	kuda: function ({nama}) {
+// 		var kata = "nama saya " + nama;
+// 		return kata;
+// 	},
+// 	user: getUser
+// };
+
+// app.use('/graphql', express_graphql({
+// 	schema: schema,
+// 	rootValue: root,
+// 	graphiql: true
+// }));
+
+//GraphQL end here ------
+
 app.use(session({secret: 'kuda'}));
 
 app.get('/', function(req, res, next) {
