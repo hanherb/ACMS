@@ -7,50 +7,59 @@ var fs = require('fs');
 
 //GraphQL start here ------
 
-// var express_graphql = require('express-graphql');
-// var {buildSchema} = require('graphql');
+var express_graphql = require('express-graphql');
+var {buildSchema} = require('graphql');
 
-// var schema = buildSchema(`
-// 	type Query {
-// 		user(id: String): User,
-// 		kuda(nama: String): String
-// 	},
+var schema = buildSchema(`
+	type Query {
+		user(fullname: String!): Person,
+		users: [Person]
+	},
 
-// 	type User {
-// 		_id: Int,
-// 		fullname: String,
-// 		email: String,
-// 		role: String,
-// 		authority: [Int]
-// 	}
-// `);
-// var data = [];
-// mongo.mongoUser("find", {}, function(response) {
-// 	data.push(response);
-// 	console.log(data);
-// });
+	type Person {
+	    fullname: String,
+	    email: String,
+	    role: String,
+	    authority: Authority 
+  	}
 
-// var getUser = function(args) {
-// 	var id = args.id;
-// 	for(var i = 0; i < data.length; i++) {
-// 		if(id = data[i].fullname)
-// 			return data[i].email;
-// 	}
-// }
+  	type Authority {
+  		read: Int,
+  		create: Int,
+  		update: Int,
+  		delete: Int
+  	}
+`);
 
-// var root = {
-// 	kuda: function ({nama}) {
-// 		var kata = "nama saya " + nama;
-// 		return kata;
-// 	},
-// 	user: getUser
-// };
+var users = [];
+mongo.mongoUser("find", {}, function(response) {
+	for(var i = 0; i < response.length; i++)
+		users.push(response[i]);
+});
 
-// app.use('/graphql', express_graphql({
-// 	schema: schema,
-// 	rootValue: root,
-// 	graphiql: true
-// }));
+var getUser = function(args) { // return a single user based on id
+	var userFullname = args.fullname;
+  	for(var i = 0; i < users.length; i++) {
+	  	if(userFullname == users[i].fullname) {
+	  		return users[i];
+	  	}
+	}
+}
+
+var getUsers = function() {
+	return users;
+}
+
+var root = {
+	user: getUser,
+	users: getUsers
+};
+
+app.use('/graphql', express_graphql({
+	schema: schema,
+	rootValue: root,
+	graphiql: true
+}));
 
 //GraphQL end here ------
 
