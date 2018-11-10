@@ -75,7 +75,6 @@ router.route('/create-user').get(function(req, res) {
 		role: req.query.role,
 		authority: req.query.authority
 	}
-	console.log(obj.authority);
 
 	mongo.mongoUser("insert-one", obj, function(response) {
 		res.json(response.insertedCount);
@@ -143,6 +142,39 @@ router.route('/add-plugin').get(function(req, res) {
 		});
 	}
 	res.json(1);
+});
+
+router.route('/list-blog').get(function(req, res) {
+	mongo.mongoBlog("find", {}, function(response) {
+		res.json(response);
+	});
+});
+
+router.route('/add-post').get(function(req, res) {
+	var obj = {
+		title: req.query.title,
+		content: req.query.content,
+		date: req.query.date,
+		month: req.query.month,
+		year: req.query.year
+	}
+	mongo.mongoBlog("insert-one", obj, function(response) {
+		res.json(response.insertedCount);
+	});
+});
+
+router.route('/update-post').get(function(req, res) {
+	var query = [{title: req.query.old}, {$set: {title: req.query.title, content: req.query.content}}];
+	mongo.mongoBlog("update-one", query, function(response) {
+		res.json(response);
+	});
+});
+
+router.route('/delete-post').get(function(req, res) {
+	var query = {title: req.query.title};
+	mongo.mongoBlog("delete-one", query, function(response) {
+		res.json(response);
+	});
 });
 
 router.route('/logout').get(function(req, res) {

@@ -14,7 +14,9 @@ var {buildSchema} = require('graphql');
 var schema = buildSchema(`
 	type Query {
 		user(fullname: String!): Person,
-		users: [Person]
+		users: [Person],
+		plugin(name: String!): Plugin,
+		plugins: [Plugin]
 	},
 
 	type Person {
@@ -30,12 +32,23 @@ var schema = buildSchema(`
   		update: Int,
   		delete: Int
   	}
+
+  	type Plugin {
+  		name: String,
+  		status: Int
+  	}
 `);
 
 var users = [];
 mongo.mongoUser("find", {}, function(response) {
 	for(var i = 0; i < response.length; i++)
 		users.push(response[i]);
+});
+
+var plugins = [];
+mongo.mongoPlugin("find", {}, function(response) {
+	for(var i = 0; i < response.length; i++)
+		plugins.push(response[i]);
 });
 
 var getUser = function(args) { // return a single user based on id
@@ -51,9 +64,24 @@ var getUsers = function() {
 	return users;
 }
 
+var getPlugin = function(args) { // return a single user based on id
+	var pluginName = args.name;
+  	for(var i = 0; i < plugins.length; i++) {
+	  	if(pluginName == plugins[i].name) {
+	  		return plugins[i];
+	  	}
+	}
+}
+
+var getPlugins = function() {
+	return plugins;
+}
+
 var root = {
 	user: getUser,
-	users: getUsers
+	users: getUsers,
+	plugin: getPlugin,
+	plugins: getPlugins
 };
 
 app.use('/graphql', express_graphql({

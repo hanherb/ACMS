@@ -93,3 +93,47 @@ exports.mongoPlugin = function(action, query, callback) {
 		}
 	});
 }
+
+exports.mongoBlog = function(action, query, callback) {
+	MongoClient.connect(mongourl, function(err, db) {
+		if(err) {
+			console.log("Error: ", err);
+		}
+		else {
+			var dbo = db.db("acms");
+
+			if(action == "insert-one") {
+				console.log("Connection Established. Action="+action);
+				dbo.collection("blog").insertOne(query, function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "find") {
+				dbo.collection("blog").find({}).toArray(function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "update-one") {
+				dbo.collection("blog").updateOne(query[0], query[1], function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+
+			else if(action == "delete-one") {
+				dbo.collection("blog").deleteOne(query, function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+		}
+	});
+}
