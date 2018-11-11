@@ -1,3 +1,7 @@
+$(function(){
+	$(".nav").load("././navbar.html");
+});
+
 // menampilkan ke #tableUser di dashboard.html
 function getUser() {
 	$.get('/get-user', {}, function(data) {
