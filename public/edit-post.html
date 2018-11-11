@@ -36,16 +36,16 @@
 	          		<div class="form-post">
 	            		<div class="form-group col-md-12">
 					    	<label>Title:</label>
-					    	<input type="text" class="form-control" id="add-post-title">
+					    	<input type="text" class="form-control" id="update-post-title">
 					  	</div>
 					  	<div class="row">
 				  		</div>
 					  	<div class="form-group col-md-12">
 					    	<label>Content:</label>
-					    	<textarea class="form-control" rows="16" id="add-post-content"></textarea>
+					    	<textarea class="form-control" rows="16" id="update-post-content"></textarea>
 					  	</div>
 	          		</div>
-	          		<button class="btn btn-primary" id="btn-confirm-add-post">Confirm Post</button>
+	          		<button class="btn btn-primary" id="btn-confirm-update-post">Confirm Post</button>
 	        	</div>
 	      	</div>
 	    </div>
@@ -53,10 +53,11 @@
 			$(document).ready(function() {
 			    checkSession();
 			    navPlugin();
+			    formPostValue();
 			});
 
-			$('#btn-confirm-add-post').click(function() {
-				addPost();
+			$('#btn-confirm-update-post').click(function() {
+				updatePost();
 			});
 		</script>
 	</body>
