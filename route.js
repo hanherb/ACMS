@@ -1,11 +1,41 @@
 var express = require('express');
+var app = express();
 var session = require('express-session');
+var jwt = require('jsonwebtoken');
 var mongodb = require('mongodb');
 var mongo = require('./config/mongo-connect');
 var fs = require('fs');
 var router = express.Router();
 router.route('/').get(function (req, res) {
     res.redirect('/index.html');
+});
+router.route('/api/post').get(function (req, res) {
+    console.log(req.token);
+    jwt.verify(req.token, 'kuda', function (err, authData) {
+        if (err) {
+            res.json({
+                error: err
+            });
+        }
+        else {
+            res.json({
+                text: 'Post here',
+                authData: authData
+            });
+        }
+    });
+});
+router.route('/api/login').get(function (req, res) {
+    var user = {
+        fullname: req.query.fullname,
+        email: req.query.email
+    };
+    jwt.sign({ user: user }, 'kuda', function (err, token) {
+        res.cookie('jwtToken', token, { maxAge: 900000, httpOnly: true });
+        res.json({
+            token: token
+        });
+    });
 });
 //mengambil data dari collection user untuk ditampilkan di dashboard.html
 router.route('/get-user').get(function (req, res) {
@@ -156,6 +186,7 @@ router.route('/delete-post').get(function (req, res) {
     });
 });
 router.route('/logout').get(function (req, res) {
+    res.clearCookie("jwtToken");
     req.session.destroy(function () {
         res.redirect('/');
     });

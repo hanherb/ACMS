@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var cookieParser = require('cookie-parser');
 var route = require('./route.js');
 var session = require('express-session');
 var mongodb = require('mongodb');
@@ -7,6 +8,7 @@ var mongo = require('./config/mongo-connect');
 var fs = require('fs');
 var express_graphql = require('express-graphql');
 var graphvar = require('./config/graphql');
+var middle = require('./config/middleware');
 
 app.use('/graphql', express_graphql({
 	schema: graphvar.schema,
@@ -15,6 +17,10 @@ app.use('/graphql', express_graphql({
 }));
 
 app.use(session({secret: 'kuda'}));
+
+app.use(cookieParser());
+
+app.all('*', middle.verifyToken);
 
 app.use('/', route);
 

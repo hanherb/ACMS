@@ -53,7 +53,9 @@ function loginUser() {
         $.get('/login-user', { email: email, password: password }, function (data) {
             if (data) {
                 alert("Login Success");
-                window.location.replace("http://localhost:3000/index.html");
+                $.get('/api/login', { fullname: data.fullname, email: data.email }, function () {
+                    window.location.replace("http://localhost:3000/index.html");
+                });
             }
             else {
                 alert("Incorrect Credential");
