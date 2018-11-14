@@ -274,7 +274,7 @@ function navPlugin() {
 		console.log(data);
 		for(let i = 0; i < data.length; i++) {
 			if(data[i].status == 1){
-				$('.plugin-nav').append('<li><a href="/'+data[i].name+'.html">'+data[i].name+'</a></li>');
+				$('.plugin-nav').append('<li><a href="/'+data[i].name+'/'+data[i].name+'.html">'+data[i].name+'</a></li>');
 			}
 		}
 	});
@@ -295,17 +295,19 @@ function listPlugin() {
 
 function getPlugin() {
 	$.get('/get-plugin', {}, function(data) {
-		for(let i = 0; i < data.length; i++) {
-			$('#plugin-list').find('.checkbox input').each(function(){
-				if(data[i].name == this.id) {
-					if(data[i].status == 1) {
-						$(this).prop('checked', true);
+		if(data != "No session") {
+			for(let i = 0; i < data.length; i++) {
+				$('#plugin-list').find('.checkbox input').each(function(){
+					if(data[i].name == this.id) {
+						if(data[i].status == 1) {
+							$(this).prop('checked', true);
+						}
+						else {
+							$(this).prop('checked', false);
+						}
 					}
-					else {
-						$(this).prop('checked', false);
-					}
-				}
-			});
+				});
+			}
 		}
 	});
 }

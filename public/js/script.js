@@ -253,7 +253,7 @@ function navPlugin() {
         console.log(data);
         for (var i = 0; i < data.length; i++) {
             if (data[i].status == 1) {
-                $('.plugin-nav').append('<li><a href="/' + data[i].name + '.html">' + data[i].name + '</a></li>');
+                $('.plugin-nav').append('<li><a href="/' + data[i].name + '/' + data[i].name + '.html">' + data[i].name + '</a></li>');
             }
         }
     });
@@ -272,20 +272,22 @@ function listPlugin() {
 //--
 function getPlugin() {
     $.get('/get-plugin', {}, function (data) {
-        var _loop_1 = function (i) {
-            $('#plugin-list').find('.checkbox input').each(function () {
-                if (data[i].name == this.id) {
-                    if (data[i].status == 1) {
-                        $(this).prop('checked', true);
+        if (data != "No session") {
+            var _loop_1 = function (i) {
+                $('#plugin-list').find('.checkbox input').each(function () {
+                    if (data[i].name == this.id) {
+                        if (data[i].status == 1) {
+                            $(this).prop('checked', true);
+                        }
+                        else {
+                            $(this).prop('checked', false);
+                        }
                     }
-                    else {
-                        $(this).prop('checked', false);
-                    }
-                }
-            });
-        };
-        for (var i = 0; i < data.length; i++) {
-            _loop_1(i);
+                });
+            };
+            for (var i = 0; i < data.length; i++) {
+                _loop_1(i);
+            }
         }
     });
 }

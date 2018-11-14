@@ -3,7 +3,7 @@ var app = express();
 var session = require('express-session');
 var jwt = require('jsonwebtoken');
 var mongodb = require('mongodb');
-var mongo = require('./config/mongo-connect');
+var mongo = require('./src/mongo-connect');
 var fs = require('fs');
 var router = express.Router();
 router.route('/').get(function (req, res) {
@@ -23,18 +23,6 @@ router.route('/api/post').get(function (req, res) {
                 authData: authData
             });
         }
-    });
-});
-router.route('/api/login').get(function (req, res) {
-    var user = {
-        fullname: req.query.fullname,
-        email: req.query.email
-    };
-    jwt.sign({ user: user }, 'kuda', function (err, token) {
-        res.cookie('jwtToken', token, { maxAge: 900000, httpOnly: true });
-        res.json({
-            token: token
-        });
     });
 });
 //mengambil data dari collection user untuk ditampilkan di dashboard.html
@@ -141,11 +129,16 @@ router.route('/list-plugin').get(function (req, res) {
     });
 });
 router.route('/get-plugin').get(function (req, res) {
-    var plugin = req.query.plugin;
-    var query = {};
-    mongo.mongoPlugin("find", query, function (response) {
-        res.json(response);
-    });
+    if (req.session.email) {
+        var plugin = req.query.plugin;
+        var query = {};
+        mongo.mongoPlugin("find", query, function (response) {
+            res.json(response);
+        });
+    }
+    else {
+        res.json("No session");
+    }
 });
 router.route('/add-plugin').get(function (req, res) {
     var plugin = req.query.plugin;

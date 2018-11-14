@@ -3,7 +3,7 @@ const app = express();
 const session = require('express-session');
 const jwt = require('jsonwebtoken');
 const mongodb = require('mongodb');
-const mongo = require('./config/mongo-connect');
+const mongo = require('./src/mongo-connect');
 const fs = require('fs');
 
 const router = express.Router();
@@ -26,20 +26,6 @@ router.route('/api/post').get(function(req, res) {
 				authData
 			});
 		}
-	});
-});
-
-router.route('/api/login').get(function(req, res) {
-	const user = {
-		fullname: req.query.fullname,
-		email: req.query.email
-	}
-
-	jwt.sign({user: user}, 'kuda', function(err, token) {
-		res.cookie('jwtToken', token, { maxAge: 900000, httpOnly: true });
-		res.json({
-			token: token
-		});
 	});
 });
 
@@ -159,11 +145,16 @@ router.route('/list-plugin').get(function(req, res) {
 });
 
 router.route('/get-plugin').get(function(req, res) {
-	var plugin = req.query.plugin;
-	var query = {};
-	mongo.mongoPlugin("find", query, function(response) {
-		res.json(response);
-	});
+	if(req.session.email) {
+		var plugin = req.query.plugin;
+		var query = {};
+		mongo.mongoPlugin("find", query, function(response) {
+			res.json(response);
+		});
+	}
+	else {
+		res.json("No session");
+	}
 });
 
 router.route('/add-plugin').get(function(req, res) {

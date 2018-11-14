@@ -1,15 +1,15 @@
 var mongodb = require('mongodb');
 var mongo = require('./mongo-connect');
 var {buildSchema} = require('graphql');
+var mergeSchema = require('graphql-tools');
+var blogGraphql = require('../plugin/blog/blog-graphql');
 
-exports.schema = buildSchema(`
+var defaultSchema = buildSchema(`
 	type Query {
 		user(fullname: String!): Person,
 		users: [Person],
 		plugin(name: String!): Plugin,
 		plugins: [Plugin],
-		blog(title: String!): Blog,
-		blogs: [Blog]
 	},
 
 	type Person {
@@ -17,25 +17,28 @@ exports.schema = buildSchema(`
 	    email: String,
 	    role: String,
 	    authority: Authority 
-  	}
+  	},
 
   	type Authority {
   		read: Int,
   		create: Int,
   		update: Int,
   		delete: Int
-  	}
+  	},
 
   	type Plugin {
   		name: String,
   		status: Int
   	}
-
-  	type Blog {
-  		title: String,
-  		content: String
-  	}
 `);
+
+var schemas = [];
+schemas.push(defaultSchema);
+schemas.push(blogGraphql.schema);
+
+exports.schema = mergeSchema.mergeSchemas({
+  schemas: schemas
+});
 
 var users = [];
 mongo.mongoUser("find", {}, function(response) {
@@ -47,12 +50,6 @@ var plugins = [];
 mongo.mongoPlugin("find", {}, function(response) {
 	for(var i = 0; i < response.length; i++)
 		plugins.push(response[i]);
-});
-
-var blogs = [];
-mongo.mongoBlog("find", {}, function(response) {
-	for(var i = 0; i < response.length; i++)
-		blogs.push(response[i]);
 });
 
 var getUser = function(args) { // return a single user based on id
@@ -81,24 +78,11 @@ var getPlugins = function() {
 	return plugins;
 }
 
-var getBlog = function(args) { // return a single user based on id
-	var blogTitle = args.title;
-  	for(var i = 0; i < blogs.length; i++) {
-	  	if(blogTitle == blogs[i].title) {
-	  		return blogs[i];
-	  	}
-	}
-}
-
-var getBlogs = function() {
-	return blogs;
-}
-
 exports.root = {
 	user: getUser,
 	users: getUsers,
 	plugin: getPlugin,
 	plugins: getPlugins,
-	blog: getBlog,
-	blogs: getBlogs
+	blog: blogGraphql.root.blog,
+	blogs: blogGraphql.root.blogs
 };
