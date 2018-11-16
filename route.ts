@@ -12,7 +12,8 @@ router.route('/').get(function(req, res) {
 	res.redirect('/index.html');
 });
 
-router.route('/api/post').get(function(req, res) {
+//route api start here
+router.route('/api/token').get(function(req, res) {
 	console.log(req.token);
 	jwt.verify(req.token, 'kuda', function(err, authData) {
 		if(err) {
@@ -28,6 +29,25 @@ router.route('/api/post').get(function(req, res) {
 		}
 	});
 });
+
+router.route('/api/user').get(function(req, res) {
+	mongo.mongoUser("find", {}, function(response) {
+		res.json(response);
+	});
+});
+
+router.route('/api/plugin').get(function(req, res) {
+	mongo.mongoPlugin("find", {}, function(response) {
+		res.json(response);
+	});
+});
+
+router.route('/api/blog').get(function(req, res) {
+	mongo.mongoBlog("find", {}, function(response) {
+		res.json(response);
+	});
+});
+//--
 
 //mengambil data dari collection user untuk ditampilkan di dashboard.html
 router.route('/get-user').get(function(req, res) {
@@ -60,6 +80,11 @@ router.route('/login-user').get(function(req, res) {
 	var query = {email: req.query.email, password: req.query.password};
 	mongo.mongoUser("find-query", query, function(response) {
 		if(response[0]) {
+			var token = jwt.sign({user: response[0]},
+	        	'kuda',
+	          	{expiresIn: '24h'}
+	        );
+	        res.cookie('jwtToken', token);
 			req.session.email = response[0].email;
 			req.session.fullname = response[0].fullname;
 			req.session.role = response[0].role;
@@ -137,8 +162,7 @@ router.route('/list-plugin').get(function(req, res) {
 	var temp = [];
 	fs.readdir(folder, (err, files) => {
 		files.forEach(file => {
-			if(file.substr(-3) == '.js')
-	 			temp.push(file.slice(0, -3));
+	 		temp.push(file);
   		});
   		res.json(temp);
 	})

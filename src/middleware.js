@@ -12,7 +12,10 @@ exports.verifyToken = function(req, res, next) {
 		'/add-post',
 		'/update-post',
 		'/delete-post',
-		'/api/post'
+		'/api/token',
+		'/api/user',
+		'/api/plugin',
+		'/api/blog'
 	];
 
 	for(let i = 0; i <= privatePath.length; i++) {

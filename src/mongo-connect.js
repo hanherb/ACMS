@@ -1,9 +1,18 @@
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
-var mongourl = 'mongodb://localhost:27017/';
+// var mongourl = 'mongodb://localhost:27017/';
+var TortoiseDB = require('tortoisedb');
+
+const torApp = new TortoiseDB({
+	name: 'acms',
+	port: 4000,
+	mongoURI: 'mongodb://localhost:27017',
+	batchLimit: 1000
+});
+torApp.start();
 
 exports.mongoUser = function(action, query, callback) {
-	MongoClient.connect(mongourl, function(err, db) {
+	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -67,7 +76,7 @@ exports.mongoUser = function(action, query, callback) {
 }
 
 exports.mongoPlugin = function(action, query, callback) {
-	MongoClient.connect(mongourl, function(err, db) {
+	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -95,7 +104,7 @@ exports.mongoPlugin = function(action, query, callback) {
 }
 
 exports.mongoBlog = function(action, query, callback) {
-	MongoClient.connect(mongourl, function(err, db) {
+	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}

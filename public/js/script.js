@@ -53,9 +53,7 @@ function loginUser() {
         $.get('/login-user', { email: email, password: password }, function (data) {
             if (data) {
                 alert("Login Success");
-                $.get('/api/login', { fullname: data.fullname, email: data.email }, function () {
-                    window.location.replace("http://localhost:3000/index.html");
-                });
+                window.location.replace("http://localhost:3000/index.html");
             }
             else {
                 alert("Incorrect Credential");
@@ -262,6 +260,7 @@ function navPlugin() {
 //setting plugin list
 function listPlugin() {
     $.get('/list-plugin', {}, function (data) {
+        console.log(data);
         for (var i = 0; i < data.length; i++) {
             $('#plugin-list').append('<div class="checkbox cb-' + data[i] + '">' +
                 '<label><input type="checkbox" id="' + data[i] + '">' + data[i] + '</label>' +
