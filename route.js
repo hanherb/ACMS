@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken');
 var mongodb = require('mongodb');
 var mongo = require('./src/mongo-connect');
 var fs = require('fs');
+var middle = require('./src/middleware');
 var router = express.Router();
 router.route('/').get(function (req, res) {
     res.redirect('/index.html');
@@ -26,17 +27,17 @@ router.route('/api/token').get(function (req, res) {
         }
     });
 });
-router.route('/api/user').get(function (req, res) {
+router.route('/api/user').get(middle.apiAuthCheck, function (req, res) {
     mongo.mongoUser("find", {}, function (response) {
         res.json(response);
     });
 });
-router.route('/api/plugin').get(function (req, res) {
+router.route('/api/plugin').get(middle.apiAuthCheck, function (req, res) {
     mongo.mongoPlugin("find", {}, function (response) {
         res.json(response);
     });
 });
-router.route('/api/blog').get(function (req, res) {
+router.route('/api/blog').get(middle.apiAuthCheck, function (req, res) {
     mongo.mongoBlog("find", {}, function (response) {
         res.json(response);
     });
@@ -56,10 +57,16 @@ router.route('/register-user').get(function (req, res) {
         password: req.query.password,
         role: "user",
         authority: {
-            "read": 0,
-            "create": 0,
-            "update": 0,
-            "delete": 0
+            "user": {
+                "read": 0,
+                "create": 0,
+                "update": 0,
+                "delete": 0
+            },
+            "api": {
+                "user": 0,
+                "plugin": 0
+            }
         }
     };
     mongo.mongoUser("insert-one", obj, function (response) {

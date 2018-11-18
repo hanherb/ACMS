@@ -39,3 +39,32 @@ exports.verifyToken = function(req, res, next) {
 		}
 	}
 }
+
+exports.apiAuthCheck = function(req, res, next) {
+	if(req.session.email) {
+		if(req.path == '/api/user') {
+			if(req.session.authority.api.user == 1) {
+				return next();
+			}
+			else {
+				res.json("You don't have enough permission");
+			}
+		}
+		if(req.path == '/api/plugin') {
+			if(req.session.authority.api.plugin == 1) {
+				return next();
+			}
+			else {
+				res.json("You don't have enough permission");
+			}
+		}
+		if(req.path == '/api/blog') {
+			if(req.session.authority.api.plugin == 1) {
+				return next();
+			}
+			else {
+				res.json("You don't have enough permission");
+			}
+		}
+	}
+}

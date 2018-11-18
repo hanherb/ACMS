@@ -78,7 +78,7 @@ function checkSession() {
 			$('.session').show();
 			$('.session span').html(data.fullname);
 
-			if(data.authority.read == 1) {
+			if(data.authority.user.read == 1) {
 				$('.admin-session').show();
 			}
 		}
@@ -94,7 +94,7 @@ function checkSession() {
 function manageUser(action: string, email: string) {
 	$.get('/check-session', {}, function(data){
 		if(action == "create") {
-			if(data.authority.create == 1) {
+			if(data.authority.user.create == 1) {
 				$('#modalCreate').modal('toggle');
 			}
 			else {
@@ -102,7 +102,7 @@ function manageUser(action: string, email: string) {
 			}
 		}
 		else if(action == "update") {
-			if(data.authority.update == 1) {
+			if(data.authority.user.update == 1) {
 				$('#modalUpdate').modal('toggle');
 				$('#update-email').val("");
 				$('#update-fullname').val("");
@@ -112,14 +112,18 @@ function manageUser(action: string, email: string) {
 					$('#update-email').val(data2[0].email);
 					$('#update-fullname').val(data2[0].fullname);
 					$('#update-role').val(data2[0].role);
-					if(data2[0].authority.read == 1)
+					if(data2[0].authority.user.read == 1)
 						$('.cb2 #cb-read').prop('checked', true);
-					if(data2[0].authority.create == 1)
+					if(data2[0].authority.user.create == 1)
 						$('.cb2 #cb-create').prop('checked', true);
-					if(data2[0].authority.update == 1)
+					if(data2[0].authority.user.update == 1)
 						$('.cb2 #cb-update').prop('checked', true);
-					if(data2[0].authority.delete == 1)
+					if(data2[0].authority.user.delete == 1)
 						$('.cb2 #cb-delete').prop('checked', true);
+					if(data2[0].authority.api.user == 1)
+						$('.cb2 #cb-user').prop('checked', true);
+					if(data2[0].authority.api.plugin == 1)
+						$('.cb2 #cb-plugin').prop('checked', true);
 				});
 		}
 			else {
@@ -127,7 +131,7 @@ function manageUser(action: string, email: string) {
 			}
 		}
 		else if(action == "delete") {
-			if(data.authority.delete == 1) {
+			if(data.authority.user.delete == 1) {
 				$('#modalDelete').modal('toggle');
 				$.get('/delete-user-form', {email: email}, function(data2) {
 					$('#delete-email').html(data2[0].email);
@@ -152,6 +156,8 @@ function updateUser() {
 	let cbCreate: number;
 	let cbUpdate: number;
 	let cbDelete: number;
+	let cbUser: number;
+	let cbPlugin: number;
 
 	if($('.cb2 #cb-read').is(':checked')) 
 		cbRead = 1;
@@ -169,12 +175,26 @@ function updateUser() {
 		cbDelete = 1;
 	else
 		cbDelete = 0;
+	if($('.cb2 #cb-user').is(':checked')) 
+		cbUser = 1;
+	else
+		cbUser = 0;
+	if($('.cb2 #cb-plugin').is(':checked')) 
+		cbPlugin = 1;
+	else
+		cbPlugin = 0;
 
 	let authority = {
-		read: cbRead,
-		create: cbCreate,
-		update: cbUpdate,
-		delete: cbDelete
+		user: {
+			read: cbRead,
+			create: cbCreate,
+			update: cbUpdate,
+			delete: cbDelete
+		},
+		api: {
+			user: cbUser,
+			plugin: cbPlugin		
+		}
 	}
 
 	if(email == null || fullname == null || role == null) {
@@ -205,6 +225,8 @@ function createUser() {
 	let cbCreate: number;
 	let cbUpdate: number;
 	let cbDelete: number;
+	let cbUser: number;
+	let cbPlugin: number;
 
 	if($('.cb1 #cb-read').is(':checked')) 
 		cbRead = 1;
@@ -222,12 +244,26 @@ function createUser() {
 		cbDelete = 1;
 	else
 		cbDelete = 0;
+	if($('.cb1 #cb-user').is(':checked')) 
+		cbUser = 1;
+	else
+		cbUser = 0;
+	if($('.cb1 #cb-plugin').is(':checked')) 
+		cbPlugin = 1;
+	else
+		cbPlugin = 0;
 
 	let authority = {
-		read: cbRead,
-		create: cbCreate,
-		update: cbUpdate,
-		delete: cbDelete
+		user: {
+			read: cbRead,
+			create: cbCreate,
+			update: cbUpdate,
+			delete: cbDelete
+		},
+		api: {
+			user: cbUser,
+			plugin: cbPlugin		
+		}
 	}
 
 	if(email == null || fullname == null || role == null) {
