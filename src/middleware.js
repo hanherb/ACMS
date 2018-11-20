@@ -1,8 +1,6 @@
 exports.verifyToken = function(req, res, next) {
 	let privatePath = [
 		'/get-user',
-		'/update-user-form',
-		'/delete-user-form',
 		'/create-user',
 		'/update-user',
 		'/delete-user',

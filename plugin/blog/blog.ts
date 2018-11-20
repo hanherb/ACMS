@@ -1,21 +1,41 @@
 //menampilkan list post pada halaman blog.html
 function listBlog() {
-	$.get('/list-blog', {}, function(data) {
-		for(let i = 0; i < data.length; i++) {
+	var query = `query getAllBlog {
+	  blogs {
+	    title
+	    content
+	    date
+	    month
+	    year
+	  }
+	}`;
+
+	fetch('/graphql', {
+  		method: 'POST',
+	  	headers: {
+	    	'Content-Type': 'application/json',
+	    	'Accept': 'application/json',
+	  	},
+	  	body: JSON.stringify({
+	    	query,
+	    	variables: {},
+	  	})
+	}).then(r => r.json()).then(function(data) {
+	  	for(let i = 0; i < data.data.blogs.length; i++) {
 			$('.container-post').append('<div class="post-preview">'+
 	            		'<a href="post.html">'+
 		              		'<h2 class="post-title">'+
-		                		data[i].title+
+		                		data.data.blogs[i].title+
 		              		'</h2>'+
 	            		'</a>'+
 	            		'<p class="post-meta">Posted on '+
-              				data[i].month+' '+data[i].date+', '+data[i].year+
+              				data.data.blogs[i].month+' '+data.data.blogs[i].date+', '+data.data.blogs[i].year+
               			'</p>'+
               			'<p class="post-content">'+
-	              			data[i].content+
+	              			data.data.blogs[i].content+
               			'</p>'+
-              			'<a class="btn btn-primary" id="btn-update-post" name="'+data[i].title+'" onclick="formPost(this.name);">Edit Post</a>'+
-	          			'<a class="btn btn-danger" id="btn-delete-post" name="'+data[i].title+'" onclick="checkDeletePost(this.name);">Delete Post</a>'+
+              			'<a class="btn btn-primary" id="btn-update-post" name="'+data.data.blogs[i].title+'" onclick="formPost(this.name);">Edit Post</a>'+
+	          			'<a class="btn btn-danger" id="btn-delete-post" name="'+data.data.blogs[i].title+'" onclick="checkDeletePost(this.name);">Delete Post</a>'+
 	          			'<hr>'+
 	          		'</div>');
 		}
@@ -37,6 +57,33 @@ function addPost() {
 
 	$.get('/add-post', {title: title, content: content, date: date, month: month, year: year}, function(data) {
 		if(data == 1) {
+			let query = `mutation createSingleBlog($input:BlogInput) {
+			  createBlog(input: $input) {
+			    title
+			  }
+			}`;
+
+			fetch('/graphql', {
+		  		method: 'POST',
+			  	headers: {
+			    	'Content-Type': 'application/json',
+			    	'Accept': 'application/json',
+			  	},
+			  	body: JSON.stringify({
+    				query,
+			    	variables: {
+			      		input: {
+			        		title,
+			        		content,
+			        		date,
+			        		month,
+			        		year
+			      		}
+			    	}
+			  	})
+			}).then(r => r.json()).then(function(data) {
+				console.log(data);
+			});
 			alert("Add Post Success");
 			window.location.replace("http://localhost:3000/blog/blog.html");
 		}
@@ -53,14 +100,28 @@ function formPost(name) {
 }
 
 function formPostValue() {
-	let url = window.location.href.split("?title=")[1].replace(/%20/g, " ");
-	$.get('/list-blog', {}, function(data) {
-		for(let i = 0; i < data.length; i++) {
-			if(data[i].title == url) {
-				$('#update-post-title').val(data[i].title);
-				$('#update-post-content').val(data[i].content);
-			}
-		}
+	let title = window.location.href.split("?title=")[1].replace(/%20/g, " ");
+	var blogTitle = title;
+	var query = `query getSingleBlog($blogTitle: String!) {
+	  blog(title: $blogTitle) {
+	    title
+	    content
+	  }
+	}`;
+
+	fetch('/graphql', {
+  		method: 'POST',
+	  	headers: {
+	    	'Content-Type': 'application/json',
+	    	'Accept': 'application/json',
+	  	},
+	  	body: JSON.stringify({
+	    	query,
+	    	variables: {blogTitle},
+	  	})
+	}).then(r => r.json()).then(function(data) {
+	  	$('#update-post-title').val(data.data.blog.title);
+		$('#update-post-content').val(data.data.blog.content);
 	});
 }
 
@@ -68,9 +129,45 @@ function updatePost() {
 	let oldTitle = window.location.href.split("?title=")[1].replace(/%20/g, " ");
 	let title = $('#update-post-title').val() as string;
 	let content = $('#update-post-content').val() as string;
+	let currentdate = new Date();
+	let date = currentdate.getDate();
+	const monthNames = ["January", "February", "March", "April", "May", "June",
+	  "July", "August", "September", "October", "November", "December"
+	];
+	let month = monthNames[(currentdate.getMonth())];
+	let year = currentdate.getFullYear();
 
-	$.get('/update-post', {old: oldTitle, title: title, content: content}, function(data) {
+	$.get('/update-post', {old: oldTitle, title: title, content: content, date: date, month: month, year: year}, function(data) {
 		if(data.ok == 1) {
+			let blogTitle = oldTitle;
+			let query = `mutation updateSingleBlog($blogTitle:String!, $input:BlogInput) {
+			  	updateBlog(title: $blogTitle, input: $input) {
+			    	title
+		  		}
+			}`;
+
+			fetch('/graphql', {
+		  		method: 'POST',
+			  	headers: {
+			    	'Content-Type': 'application/json',
+			    	'Accept': 'application/json',
+			  	},
+			  	body: JSON.stringify({
+    				query,
+			    	variables: {
+			    		blogTitle,
+			      		input: {
+			        		title,
+			        		content,
+			        		date,
+			        		month,
+			        		year
+			      		}
+			    	}
+			  	})
+			}).then(r => r.json()).then(function(data) {
+				console.log(data);
+			});
 			alert("Update Post Success");
 			window.location.replace("http://localhost:3000/blog/blog.html");
 		}
@@ -92,6 +189,28 @@ function deletePost() {
 
 	$.get('/delete-post', {title: title}, function(data) {
 		if(data.ok == 1) {
+			let blogTitle = title;
+			let query = `mutation deleteSingleBlog($blogTitle:String!) {
+			  	deleteBlog(title: $blogTitle) {
+			    	title
+		  		}
+			}`;
+
+			fetch('/graphql', {
+		  		method: 'POST',
+			  	headers: {
+			    	'Content-Type': 'application/json',
+			    	'Accept': 'application/json',
+			  	},
+			  	body: JSON.stringify({
+    				query,
+			    	variables: {
+			    		blogTitle
+			    	}
+			  	})
+			}).then(r => r.json()).then(function(data) {
+				console.log(data);
+			});
 			alert("Delete Post Success");
 			window.location.replace("http://localhost:3000/blog/blog.html");
 		}

@@ -4,12 +4,42 @@ $(function(){
 
 // menampilkan ke #tableUser di dashboard.html
 function getUser() {
-	$.get('/get-user', {}, function(data) {
-		for(let i = 0; i < data.length; i++) {
+	let query = `query getAllUser {
+				  users {
+				    fullname
+				    email
+				    role
+				    authority {
+				      user {
+				        read
+				        create
+				        update
+				        delete
+				      }
+				    	api {
+				        user
+				        plugin
+				      }
+				    }
+				  }
+				}`;
+
+	fetch('/graphql', {
+  		method: 'POST',
+	  	headers: {
+	    	'Content-Type': 'application/json',
+	    	'Accept': 'application/json',
+	  	},
+	  	body: JSON.stringify({
+	    	query,
+	    	variables: {},
+	  	})
+	}).then(r => r.json()).then(function(data) {
+		for(let i = 0; i < data.data.users.length; i++) {
 			
-			let fullname: string = data[i].fullname;
-			let email: string = data[i].email;
-			let role: string = data[i].role;
+			let fullname: string = data.data.users[i].fullname;
+			let email: string = data.data.users[i].email;
+			let role: string = data.data.users[i].role;
 
 			$('#tableUser tbody').append('<tr class="tr_data">'+
 				'<td>'+(i+1)+'</td>'+
@@ -108,24 +138,55 @@ function manageUser(action: string, email: string) {
 				$('#update-fullname').val("");
 				$('#update-role').val("");
 				$('.checkbox input').prop('checked', false);
-				$.get('/update-user-form', {email: email}, function(data2) {
-					$('#update-email').val(data2[0].email);
-					$('#update-fullname').val(data2[0].fullname);
-					$('#update-role').val(data2[0].role);
-					if(data2[0].authority.user.read == 1)
+				let userEmail = email;
+				let query = `query getSingleUser($userEmail: String!) {
+				    user(email: $userEmail) {
+			    		fullname
+				        email
+				        role
+				    		authority {
+				          user {
+				            read
+				            create
+				            update
+				            delete
+				          }
+				        	api {
+				            user
+				            plugin
+				          }
+				        }
+				    }
+				}`;
+
+				fetch('/graphql', {
+			  		method: 'POST',
+				  	headers: {
+				    	'Content-Type': 'application/json',
+				    	'Accept': 'application/json',
+				  	},
+				  	body: JSON.stringify({
+				    	query,
+				    	variables: {userEmail},
+				  	})
+				}).then(r => r.json()).then(function(data) {
+				  	$('#update-email').val(data.data.user.email);
+					$('#update-fullname').val(data.data.user.fullname);
+					$('#update-role').val(data.data.user.role);
+					if(data.data.user.authority.user.read == 1)
 						$('.cb2 #cb-read').prop('checked', true);
-					if(data2[0].authority.user.create == 1)
+					if(data.data.user.authority.user.create == 1)
 						$('.cb2 #cb-create').prop('checked', true);
-					if(data2[0].authority.user.update == 1)
+					if(data.data.user.authority.user.update == 1)
 						$('.cb2 #cb-update').prop('checked', true);
-					if(data2[0].authority.user.delete == 1)
+					if(data.data.user.authority.user.delete == 1)
 						$('.cb2 #cb-delete').prop('checked', true);
-					if(data2[0].authority.api.user == 1)
+					if(data.data.user.authority.api.user == 1)
 						$('.cb2 #cb-user').prop('checked', true);
-					if(data2[0].authority.api.plugin == 1)
+					if(data.data.user.authority.api.plugin == 1)
 						$('.cb2 #cb-plugin').prop('checked', true);
 				});
-		}
+			}
 			else {
 				alert("You don't have permission to " + action);
 			}
@@ -133,10 +194,41 @@ function manageUser(action: string, email: string) {
 		else if(action == "delete") {
 			if(data.authority.user.delete == 1) {
 				$('#modalDelete').modal('toggle');
-				$.get('/delete-user-form', {email: email}, function(data2) {
-					$('#delete-email').html(data2[0].email);
-					$('#delete-fullname').html(data2[0].fullname);
-					$('#delete-role').html(data2[0].role);
+				let userEmail = email;
+				let query = `query getSingleUser($userEmail: String!) {
+				    user(email: $userEmail) {
+			    		fullname
+				        email
+				        role
+				    		authority {
+				          user {
+				            read
+				            create
+				            update
+				            delete
+				          }
+				        	api {
+				            user
+				            plugin
+				          }
+				        }
+				    }
+				}`;
+
+				fetch('/graphql', {
+			  		method: 'POST',
+				  	headers: {
+				    	'Content-Type': 'application/json',
+				    	'Accept': 'application/json',
+				  	},
+				  	body: JSON.stringify({
+				    	query,
+				    	variables: {userEmail},
+				  	})
+				}).then(r => r.json()).then(function(data) {
+				  	$('#delete-email').html(data.data.user.email);
+					$('#delete-fullname').html(data.data.user.fullname);
+					$('#delete-role').html(data.data.user.role);
 				});
 			}
 			else {
@@ -203,6 +295,34 @@ function updateUser() {
 	else {
 		$.get('/update-user', {email: email, fullname: fullname, role: role, authority: authority}, function(data) {
 			if(data.ok == 1) {
+				let userEmail = email;
+				let query = `mutation updateSingleUser($userEmail:String!, $input:PersonInput) {
+				  	updateUser(email: $userEmail, input: $input) {
+				    	fullname
+			  		}
+				}`;
+
+				fetch('/graphql', {
+			  		method: 'POST',
+				  	headers: {
+				    	'Content-Type': 'application/json',
+				    	'Accept': 'application/json',
+				  	},
+				  	body: JSON.stringify({
+	    				query,
+				    	variables: {
+				    		userEmail,
+				      		input: {
+				        		email,
+				        		fullname,
+				        		role,
+				        		authority
+				      		}
+				    	}
+				  	})
+				}).then(r => r.json()).then(function(data) {
+					console.log(data);
+				});
 				alert("Update Success");
 				window.location.replace("http://localhost:3000/dashboard.html");
 			}
@@ -275,6 +395,33 @@ function createUser() {
 	else {
 		$.get('/create-user', {email: email, fullname: fullname, role: role, password: password, authority: authority}, function(data) {
 			if(data == 1) {
+				let query = `mutation createSingleUser($input:PersonInput) {
+				  	createUser(input: $input) {
+				    	fullname
+			  		}
+				}`;
+
+				fetch('/graphql', {
+			  		method: 'POST',
+				  	headers: {
+				    	'Content-Type': 'application/json',
+				    	'Accept': 'application/json',
+				  	},
+				  	body: JSON.stringify({
+	    				query,
+				    	variables: {
+				      		input: {
+				        		email,
+				        		fullname,
+				        		role,
+				        		authority,
+				        		password
+				      		}
+				    	}
+				  	})
+				}).then(r => r.json()).then(function(data) {
+					console.log(data);
+				});
 				alert("Create Success");
 				window.location.replace("http://localhost:3000/dashboard.html");
 			}
@@ -292,6 +439,28 @@ function deleteUser(){
 
 	$.get('/delete-user', {email: email}, function(data) {
 		if(data.ok == 1) {
+			let userEmail = email;
+			let query = `mutation deleteSingleUser($userEmail:String!) {
+			  	deleteUser(email: $userEmail) {
+			    	fullname
+		  		}
+			}`;
+
+			fetch('/graphql', {
+		  		method: 'POST',
+			  	headers: {
+			    	'Content-Type': 'application/json',
+			    	'Accept': 'application/json',
+			  	},
+			  	body: JSON.stringify({
+    				query,
+			    	variables: {
+			    		userEmail
+			    	}
+			  	})
+			}).then(r => r.json()).then(function(data) {
+				console.log(data);
+			});
 			alert("Delete Success");
 			window.location.replace("http://localhost:3000/dashboard.html");
 		}
@@ -304,11 +473,27 @@ function deleteUser(){
 
 //setting plugin navbar
 function navPlugin() {
-	$.get('/get-plugin', {}, function(data) {
-		console.log(data);
-		for(let i = 0; i < data.length; i++) {
-			if(data[i].status == 1){
-				$('.plugin-nav').append('<li><a href="/'+data[i].name+'/'+data[i].name+'.html">'+data[i].name+'</a></li>');
+	let query = `query getAllPlugin {
+	  plugins {
+	    name
+	    status
+	  }
+	}`;
+
+	fetch('/graphql', {
+  		method: 'POST',
+	  	headers: {
+	    	'Content-Type': 'application/json',
+	    	'Accept': 'application/json',
+	  	},
+	  	body: JSON.stringify({
+	    	query,
+	    	variables: {},
+	  	})
+	}).then(r => r.json()).then(function(data) {
+	  	for(let i = 0; i < data.data.plugins.length; i++) {
+			if(data.data.plugins[i].status == 1){
+				$('.plugin-nav').append('<li><a href="/'+data.data.plugins[i].name+'/'+data.data.plugins[i].name+'.html">'+data.data.plugins[i].name+'</a></li>');
 			}
 		}
 	});
@@ -329,21 +514,36 @@ function listPlugin() {
 //--
 
 function getPlugin() {
-	$.get('/get-plugin', {}, function(data) {
-		if(data != "No session") {
-			for(let i = 0; i < data.length; i++) {
-				$('#plugin-list').find('.checkbox input').each(function(){
-					if(data[i].name == this.id) {
-						if(data[i].status == 1) {
-							$(this).prop('checked', true);
-						}
-						else {
-							$(this).prop('checked', false);
-						}
+	let query = `query getAllPlugin {
+	  plugins {
+	    name
+	    status
+	  }
+	}`;
+
+	fetch('/graphql', {
+  		method: 'POST',
+	  	headers: {
+	    	'Content-Type': 'application/json',
+	    	'Accept': 'application/json',
+	  	},
+	  	body: JSON.stringify({
+	    	query,
+	    	variables: {},
+	  	})
+	}).then(r => r.json()).then(function(data) {
+	  	$('#plugin-list').find('.checkbox input').each(function(){
+	  		for(let i = 0; i < data.data.plugins.length; i++) {
+				if(data.data.plugins[i].name == this.id) {
+					if(data.data.plugins[i].status == 1) {
+						$(this).prop('checked', true);
 					}
-				});
+					else {
+						$(this).prop('checked', false);
+					}
+				}
 			}
-		}
+		});
 	});
 }
 
@@ -366,6 +566,36 @@ function addPlugin() {
 
 	$.get('/add-plugin', {plugin: plugin}, function(data) {
 		if(data == 1) {
+			for(let i = 0; i < plugin.name.length; i++) {
+				let name = plugin.name[i];
+				let status = plugin.status[i];
+				let pluginName = name;
+				let query = `mutation updateSinglePlugin($pluginName:String!, $input:PluginInput) {
+				  	updatePlugin(name: $pluginName, input: $input) {
+				    	name
+			  		}
+				}`;
+
+				fetch('/graphql', {
+			  		method: 'POST',
+				  	headers: {
+				    	'Content-Type': 'application/json',
+				    	'Accept': 'application/json',
+				  	},
+				  	body: JSON.stringify({
+	    				query,
+				    	variables: {
+				    		pluginName,
+				      		input: {
+				        		name,
+				        		status
+				      		}
+				    	}
+				  	})
+				}).then(r => r.json()).then(function(data) {
+					console.log(data);
+				});
+			}
 			alert("Plugin Updated");
 			window.location.replace("http://localhost:3000/add-plugin.html");
 		}

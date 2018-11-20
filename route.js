@@ -90,18 +90,6 @@ router.route('/login-user').get(function (req, res) {
         }
     });
 });
-router.route('/update-user-form').get(function (req, res) {
-    var query = { email: req.query.email };
-    mongo.mongoUser("find-query", query, function (response) {
-        res.json(response);
-    });
-});
-router.route('/delete-user-form').get(function (req, res) {
-    var query = { email: req.query.email };
-    mongo.mongoUser("find-query", query, function (response) {
-        res.json(response);
-    });
-});
 router.route('/create-user').get(function (req, res) {
     var obj = {
         email: req.query.email,
@@ -153,18 +141,6 @@ router.route('/list-plugin').get(function (req, res) {
         res.json(temp);
     });
 });
-router.route('/get-plugin').get(function (req, res) {
-    if (req.session.email) {
-        var plugin = req.query.plugin;
-        var query = {};
-        mongo.mongoPlugin("find", query, function (response) {
-            res.json(response);
-        });
-    }
-    else {
-        res.json("No session");
-    }
-});
 router.route('/add-plugin').get(function (req, res) {
     var plugin = req.query.plugin;
     for (var i = 0; i < plugin.name.length; i++) {
@@ -192,7 +168,7 @@ router.route('/add-post').get(function (req, res) {
     });
 });
 router.route('/update-post').get(function (req, res) {
-    var query = [{ title: req.query.old }, { $set: { title: req.query.title, content: req.query.content } }];
+    var query = [{ title: req.query.old }, { $set: { title: req.query.title, content: req.query.content, date: req.query.date, month: req.query.month, year: req.query.year } }];
     mongo.mongoBlog("update-one", query, function (response) {
         res.json(response);
     });
