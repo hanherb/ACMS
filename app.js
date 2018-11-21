@@ -20,7 +20,7 @@ app.use(session({secret: 'kuda'}));
 
 app.use(cookieParser());
 
-app.all('*', middle.verifyToken);
+app.all('*', middle.verifyToken, middle.apiAuthCheck);
 
 app.use('/', route);
 

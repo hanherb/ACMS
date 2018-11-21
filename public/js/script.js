@@ -37,12 +37,47 @@ function registerUser() {
     var fullname = $('#register-fullname').val();
     var password = $('#register-password').val();
     var repassword = $('#register-repassword').val();
+    var role = "user";
+    var authority = {
+        "user": {
+            "read": 0,
+            "create": 0,
+            "update": 0,
+            "delete": 0
+        },
+        "api": {
+            "user": 0,
+            "plugin": 0
+        }
+    };
     if (password != repassword) {
         alert("Password doesn't match");
     }
     else {
-        $.get('/register-user', { email: email, fullname: fullname, password: password }, function (data) {
+        $.get('/register-user', { email: email, fullname: fullname, password: password, role: role, authority: authority }, function (data) {
             if (data == 1) {
+                var query = "mutation createSingleUser($input:PersonInput) {\n\t\t\t\t  \tcreateUser(input: $input) {\n\t\t\t\t    \tfullname\n\t\t\t  \t\t}\n\t\t\t\t}";
+                fetch('/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        variables: {
+                            input: {
+                                email: email,
+                                fullname: fullname,
+                                role: role,
+                                authority: authority,
+                                password: password
+                            }
+                        }
+                    })
+                }).then(function (r) { return r.json(); }).then(function (data) {
+                    console.log(data);
+                });
                 alert("Register Success");
                 window.location.replace("http://localhost:3000/index.html");
             }
@@ -412,6 +447,7 @@ function listPlugin() {
     });
 }
 //--
+//seting checklist pada plugin list
 function getPlugin() {
     var query = "query getAllPlugin {\n\t  plugins {\n\t    name\n\t    status\n\t  }\n\t}";
     fetch('/graphql', {
@@ -439,6 +475,7 @@ function getPlugin() {
         });
     });
 }
+//--
 //tambah plugin
 function addPlugin() {
     var plugin = {

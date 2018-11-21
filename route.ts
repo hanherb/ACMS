@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 const mongodb = require('mongodb');
 const mongo = require('./src/mongo-connect');
 const fs = require('fs');
-var middle = require('./src/middleware');
+const middle = require('./src/middleware');
+const rf = require('./src/route-function')
 
 const router = express.Router();
 
@@ -13,71 +14,14 @@ router.route('/').get(function(req, res) {
 	res.redirect('/index.html');
 });
 
-//route api start here
-router.route('/api/token').get(function(req, res) {
-	console.log(req.token);
-	jwt.verify(req.token, 'kuda', function(err, authData) {
-		if(err) {
-			res.json({
-				error: err
-			});
-		}
-		else {
-			res.json({
-				text: 'Post here',
-				authData
-			});
-		}
-	});
-});
-
-router.route('/api/user').get(middle.apiAuthCheck, function(req, res) {
-	mongo.mongoUser("find", {}, function(response) {
-		res.json(response);
-	});
-});
-
-router.route('/api/plugin').get(middle.apiAuthCheck, function(req, res) {
-	mongo.mongoPlugin("find", {}, function(response) {
-		res.json(response);
-	});
-});
-
-router.route('/api/blog').get(middle.apiAuthCheck, function(req, res) {
-	mongo.mongoBlog("find", {}, function(response) {
-		res.json(response);
-	});
-});
-//--
-
-//mengambil data dari collection user untuk ditampilkan di dashboard.html
 router.route('/get-user').get(function(req, res) {
 	mongo.mongoUser("find", {}, function(response) {
 		res.json(response);
 	});
 });
-//--
 
 router.route('/register-user').get(function(req, res) {
-	var obj = {
-		email: req.query.email,
-		fullname: req.query.fullname,
-		password: req.query.password,
-		role: "user",
-		authority: {
-			"user": {
-				"read": 0,
-				"create": 0,
-				"update": 0,
-				"delete": 0
-			},
-			"api": {
-				"user": 0,
-				"plugin": 0
-			}
-		}
-		
-	}
+	let obj = rf.registerUser(req);
 	mongo.mongoUser("insert-one", obj, function(response) {
 		res.json(response.insertedCount);
 	});
@@ -87,15 +31,9 @@ router.route('/login-user').get(function(req, res) {
 	var query = {email: req.query.email, password: req.query.password};
 	mongo.mongoUser("find-query", query, function(response) {
 		if(response[0]) {
-			var token = jwt.sign({user: response[0]},
-	        	'kuda',
-	          	{expiresIn: '24h'}
-	        );
+			let token = rf.jwtSign(response[0]);
 	        res.cookie('jwtToken', token);
-			req.session.email = response[0].email;
-			req.session.fullname = response[0].fullname;
-			req.session.role = response[0].role;
-			req.session.authority = response[0].authority;
+			rf.assignSession(req, res, response[0]);
 			res.json(response[0]);
 		}
 		else {
@@ -105,14 +43,7 @@ router.route('/login-user').get(function(req, res) {
 });
 
 router.route('/create-user').get(function(req, res) {
-	var obj = {
-		email: req.query.email,
-		fullname: req.query.fullname,
-		password: req.query.password,
-		role: req.query.role,
-		authority: req.query.authority
-	}
-
+	let obj = rf.registerUser(req);
 	mongo.mongoUser("insert-one", obj, function(response) {
 		res.json(response.insertedCount);
 	});
@@ -137,10 +68,7 @@ router.route('/check-session').get(function(req, res) {
 		var query = {email: req.session.email};
 		mongo.mongoUser("session", query, function(response) {
 			if(response) {
-				req.session.email = response[0].email;
-				req.session.fullname = response[0].fullname;
-				req.session.role = response[0].role;
-				req.session.authority = response[0].authority;
+				rf.assignSession(req, res, response[0]);
 			}
 		});
 		res.json(req.session);
@@ -158,7 +86,7 @@ router.route('/list-plugin').get(function(req, res) {
 	 		temp.push(file);
   		});
   		res.json(temp);
-	})
+	});
 });
 
 router.route('/add-plugin').get(function(req, res) {
@@ -179,15 +107,9 @@ router.route('/list-blog').get(function(req, res) {
 });
 
 router.route('/add-post').get(function(req, res) {
-	var obj = {
-		title: req.query.title,
-		content: req.query.content,
-		date: req.query.date,
-		month: req.query.month,
-		year: req.query.year
-	}
+	let obj = rf.addPost(req);
 	mongo.mongoBlog("insert-one", obj, function(response) {
-		res.json(response.insertedCount);
+		res.json(req.session); //untuk menentukan authornya
 	});
 });
 

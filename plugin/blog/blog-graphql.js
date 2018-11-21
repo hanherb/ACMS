@@ -13,7 +13,8 @@ exports.schema = buildSchema(`
   		content: String,
   		date: Int,
   		month: String,
-  		year: Int
+  		year: Int,
+  		author: String
   	},
 
   	type Mutation {
@@ -27,7 +28,8 @@ exports.schema = buildSchema(`
   		content: String,
   		date: Int,
   		month: String,
-  		year: Int
+  		year: Int,
+  		author: String
   	}
 `);
 
@@ -54,7 +56,9 @@ var updateBlogFunction = function({title, input}) {
 	var blogTitle = title;
   	for(var i = 0; i < blogs.length; i++) {
 	  	if(blogTitle == blogs[i].title) {
+	  		var oldAuthor = blogs[i].author;
 	  		blogs[i] = input;
+	  		blogs[i].author = oldAuthor;
 	  		return input;
 	  	}
 	}

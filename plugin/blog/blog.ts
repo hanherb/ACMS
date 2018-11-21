@@ -7,6 +7,7 @@ function listBlog() {
 	    date
 	    month
 	    year
+	    author
 	  }
 	}`;
 
@@ -28,7 +29,8 @@ function listBlog() {
 		                		data.data.blogs[i].title+
 		              		'</h2>'+
 	            		'</a>'+
-	            		'<p class="post-meta">Posted on '+
+	            		'<p class="post-meta">Posted by '+
+	            			data.data.blogs[i].author+ ' on '+
               				data.data.blogs[i].month+' '+data.data.blogs[i].date+', '+data.data.blogs[i].year+
               			'</p>'+
               			'<p class="post-content">'+
@@ -56,7 +58,8 @@ function addPost() {
 	let year = currentdate.getFullYear();
 
 	$.get('/add-post', {title: title, content: content, date: date, month: month, year: year}, function(data) {
-		if(data == 1) {
+		if(data.email) {
+			let author = data.fullname;
 			let query = `mutation createSingleBlog($input:BlogInput) {
 			  createBlog(input: $input) {
 			    title
@@ -77,7 +80,8 @@ function addPost() {
 			        		content,
 			        		date,
 			        		month,
-			        		year
+			        		year,
+			        		author
 			      		}
 			    	}
 			  	})

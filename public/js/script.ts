@@ -60,13 +60,53 @@ function registerUser() {
 	let fullname: string = $('#register-fullname').val() as string;
 	let password: string = $('#register-password').val() as string;
 	let repassword: string = $('#register-repassword').val() as string;
+	let role: string = "user";
+	let authority = {
+		"user": {
+			"read": 0,
+			"create": 0,
+			"update": 0,
+			"delete": 0
+		},
+		"api": {
+			"user": 0,
+			"plugin": 0
+		}
+	}
 
 	if(password != repassword) {
 		alert("Password doesn't match");
 	}
 	else {
-		$.get('/register-user', {email: email, fullname: fullname, password: password}, function(data) {
+		$.get('/register-user', {email: email, fullname: fullname, password: password, role: role, authority: authority}, function(data) {
 			if(data == 1) {
+				let query = `mutation createSingleUser($input:PersonInput) {
+				  	createUser(input: $input) {
+				    	fullname
+			  		}
+				}`;
+
+				fetch('/graphql', {
+			  		method: 'POST',
+				  	headers: {
+				    	'Content-Type': 'application/json',
+				    	'Accept': 'application/json',
+				  	},
+				  	body: JSON.stringify({
+	    				query,
+				    	variables: {
+				      		input: {
+				        		email,
+				        		fullname,
+				        		role,
+				        		authority,
+				        		password
+				      		}
+				    	}
+				  	})
+				}).then(r => r.json()).then(function(data) {
+					console.log(data);
+				});
 				alert("Register Success");
 				window.location.replace("http://localhost:3000/index.html");
 			}
@@ -513,6 +553,7 @@ function listPlugin() {
 }
 //--
 
+//seting checklist pada plugin list
 function getPlugin() {
 	let query = `query getAllPlugin {
 	  plugins {
@@ -546,6 +587,7 @@ function getPlugin() {
 		});
 	});
 }
+//--
 
 //tambah plugin
 function addPlugin() {

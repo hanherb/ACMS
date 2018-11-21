@@ -1,6 +1,6 @@
 //menampilkan list post pada halaman blog.html
 function listBlog() {
-    var query = "query getAllBlog {\n\t  blogs {\n\t    title\n\t    content\n\t    date\n\t    month\n\t    year\n\t  }\n\t}";
+    var query = "query getAllBlog {\n\t  blogs {\n\t    title\n\t    content\n\t    date\n\t    month\n\t    year\n\t    author\n\t  }\n\t}";
     fetch('/graphql', {
         method: 'POST',
         headers: {
@@ -19,7 +19,8 @@ function listBlog() {
                 data.data.blogs[i].title +
                 '</h2>' +
                 '</a>' +
-                '<p class="post-meta">Posted on ' +
+                '<p class="post-meta">Posted by ' +
+                data.data.blogs[i].author + ' on ' +
                 data.data.blogs[i].month + ' ' + data.data.blogs[i].date + ', ' + data.data.blogs[i].year +
                 '</p>' +
                 '<p class="post-content">' +
@@ -45,7 +46,8 @@ function addPost() {
     var month = monthNames[(currentdate.getMonth())];
     var year = currentdate.getFullYear();
     $.get('/add-post', { title: title, content: content, date: date, month: month, year: year }, function (data) {
-        if (data == 1) {
+        if (data.email) {
+            var author = data.fullname;
             var query = "mutation createSingleBlog($input:BlogInput) {\n\t\t\t  createBlog(input: $input) {\n\t\t\t    title\n\t\t\t  }\n\t\t\t}";
             fetch('/graphql', {
                 method: 'POST',
@@ -61,7 +63,8 @@ function addPost() {
                             content: content,
                             date: date,
                             month: month,
-                            year: year
+                            year: year,
+                            author: author
                         }
                     }
                 })
