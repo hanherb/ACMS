@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var session = require('express-session');
+var cookieSession = require('cookie-session');
 var jwt = require('jsonwebtoken');
 var mongodb = require('mongodb');
 var mongo = require('./src/mongo-connect');
@@ -9,7 +9,7 @@ var middle = require('./src/middleware');
 var rf = require('./src/route-function');
 var router = express.Router();
 router.route('/').get(function (req, res) {
-    res.redirect('/index.html');
+    res.redirect('http://localhost:3001/');
 });
 router.route('/get-user').get(function (req, res) {
     mongo.mongoUser("find", {}, function (response) {
@@ -29,6 +29,7 @@ router.route('/login-user').get(function (req, res) {
             var token = rf.jwtSign(response[0]);
             res.cookie('jwtToken', token);
             rf.assignSession(req, res, response[0]);
+            console.log(req.session);
             res.json(response[0]);
         }
         else {
@@ -62,6 +63,7 @@ router.route('/check-session').get(function (req, res) {
                 rf.assignSession(req, res, response[0]);
             }
         });
+        console.log(req.session);
         res.json(req.session);
     }
     else {
@@ -95,7 +97,7 @@ router.route('/list-blog').get(function (req, res) {
 router.route('/add-post').get(function (req, res) {
     var obj = rf.addPost(req);
     mongo.mongoBlog("insert-one", obj, function (response) {
-        res.json(req.session); //untuk menentukan authornya
+        res.json(response);
     });
 });
 router.route('/update-post').get(function (req, res) {

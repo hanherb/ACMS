@@ -8,17 +8,26 @@ var mongo = require('./src/mongo-connect');
 var fs = require('fs');
 var express_graphql = require('express-graphql');
 var graphvar = require('./src/graphql');
+var cors = require('cors');
 var middle = require('./src/middleware');
 
-app.use('/graphql', express_graphql({
+app.use('/graphql', cors(), express_graphql({
 	schema: graphvar.schema,
 	rootValue: graphvar.root,
 	graphiql: true
 }));
 
-app.use(session({secret: 'kuda'}));
-
 app.use(cookieParser());
+
+app.use(session({secret: 'kuda'}))
+
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE, navPlugin');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
 
 app.all('*', middle.verifyToken, middle.apiAuthCheck);
 

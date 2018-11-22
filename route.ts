@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const session = require('express-session');
+const cookieSession = require('cookie-session');
 const jwt = require('jsonwebtoken');
 const mongodb = require('mongodb');
 const mongo = require('./src/mongo-connect');
@@ -11,7 +11,7 @@ const rf = require('./src/route-function')
 const router = express.Router();
 
 router.route('/').get(function(req, res) {
-	res.redirect('/index.html');
+	res.redirect('http://localhost:3001/');
 });
 
 router.route('/get-user').get(function(req, res) {
@@ -28,12 +28,13 @@ router.route('/register-user').get(function(req, res) {
 });
 
 router.route('/login-user').get(function(req, res) {
-	var query = {email: req.query.email, password: req.query.password};
+	let query = {email: req.query.email, password: req.query.password};
 	mongo.mongoUser("find-query", query, function(response) {
 		if(response[0]) {
 			let token = rf.jwtSign(response[0]);
 	        res.cookie('jwtToken', token);
 			rf.assignSession(req, res, response[0]);
+			console.log(req.session);
 			res.json(response[0]);
 		}
 		else {
@@ -50,14 +51,14 @@ router.route('/create-user').get(function(req, res) {
 });
 
 router.route('/update-user').get(function(req, res) {
-	var query = [{email: req.query.email}, {$set: {fullname: req.query.fullname, role: req.query.role, authority: req.query.authority}}];
+	let query = [{email: req.query.email}, {$set: {fullname: req.query.fullname, role: req.query.role, authority: req.query.authority}}];
 	mongo.mongoUser("update-one", query, function(response) {
 		res.json(response);
 	});
 });
 
 router.route('/delete-user').get(function(req, res) {
-	var query = {email: req.query.email};
+	let query = {email: req.query.email};
 	mongo.mongoUser("delete-one", query, function(response) {
 		res.json(response);
 	});
@@ -65,12 +66,13 @@ router.route('/delete-user').get(function(req, res) {
 
 router.route('/check-session').get(function(req, res) {
 	if(req.session.email) {
-		var query = {email: req.session.email};
+		let query = {email: req.session.email};
 		mongo.mongoUser("session", query, function(response) {
 			if(response) {
 				rf.assignSession(req, res, response[0]);
 			}
 		});
+		console.log(req.session);
 		res.json(req.session);
 	}
 	else {
@@ -79,8 +81,8 @@ router.route('/check-session').get(function(req, res) {
 });
 
 router.route('/list-plugin').get(function(req, res) {
-	var folder = __dirname + '/plugin/';
-	var temp = [];
+	let folder = __dirname + '/plugin/';
+	let temp = [];
 	fs.readdir(folder, (err, files) => {
 		files.forEach(file => {
 	 		temp.push(file);
@@ -90,9 +92,9 @@ router.route('/list-plugin').get(function(req, res) {
 });
 
 router.route('/add-plugin').get(function(req, res) {
-	var plugin = req.query.plugin;
-	for(var i = 0; i < plugin.name.length; i++) {
-		var query = [{name: plugin.name[i]}, {$set: {name: plugin.name[i], status: plugin.status[i]}}, {upsert: true}];
+	let plugin = req.query.plugin;
+	for(let i = 0; i < plugin.name.length; i++) {
+		let query = [{name: plugin.name[i]}, {$set: {name: plugin.name[i], status: plugin.status[i]}}, {upsert: true}];
 		mongo.mongoPlugin("update", query, function(response) {
 			
 		});
@@ -109,19 +111,19 @@ router.route('/list-blog').get(function(req, res) {
 router.route('/add-post').get(function(req, res) {
 	let obj = rf.addPost(req);
 	mongo.mongoBlog("insert-one", obj, function(response) {
-		res.json(req.session); //untuk menentukan authornya
+		res.json(response);
 	});
 });
 
 router.route('/update-post').get(function(req, res) {
-	var query = [{title: req.query.old}, {$set: {title: req.query.title, content: req.query.content, date: req.query.date, month: req.query.month, year: req.query.year}}];
+	let query = [{title: req.query.old}, {$set: {title: req.query.title, content: req.query.content, date: req.query.date, month: req.query.month, year: req.query.year}}];
 	mongo.mongoBlog("update-one", query, function(response) {
 		res.json(response);
 	});
 });
 
 router.route('/delete-post').get(function(req, res) {
-	var query = {title: req.query.title};
+	let query = {title: req.query.title};
 	mongo.mongoBlog("delete-one", query, function(response) {
 		res.json(response);
 	});

@@ -18,16 +18,21 @@ exports.verifyToken = function(req, res, next) {
 		}
 		else {
 			if(req.path == privatePath[i]) {
-				let cookie = req.headers.cookie;
-				if(cookie.includes('jwtToken') == true) {
-					cookie = cookie.split('jwtToken=')[1].split(';')[0];
-					req.token = cookie;
-					next();
-					break;
+				if(req.headers.cookie) {
+					let cookie = req.headers.cookie;
+					if(cookie.includes('jwtToken') == true) {
+						cookie = cookie.split('jwtToken=')[1].split(';')[0];
+						req.token = cookie;
+						next();
+						break;
+					}
+					else {
+						res.sendStatus(403);
+						break;
+					}
 				}
 				else {
-					res.sendStatus(403);
-					break;
+					console.log("No Cookies Found");
 				}
 			}
 		}

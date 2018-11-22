@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
 
 exports.assignSession = function(req, res, data) {
-	req.session.email = data.email;
+	req.session.email = data
 	req.session.fullname = data.fullname;
 	req.session.role = data.role;
 	req.session.authority = data.authority;
+	req.session.save();
 }
 
 exports.jwtSign = function(data) {
