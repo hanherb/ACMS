@@ -19,7 +19,10 @@ app.use('/graphql', cors(), express_graphql({
 
 app.use(cookieParser());
 
-app.use(session({secret: 'kuda'}))
+app.use(session({
+  secret: 'kuda',
+  cookie: { secure: false }
+}))
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');

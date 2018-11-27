@@ -4,7 +4,6 @@ const cookieSession = require('cookie-session');
 const jwt = require('jsonwebtoken');
 const mongodb = require('mongodb');
 const mongo = require('./src/mongo-connect');
-const fs = require('fs');
 const middle = require('./src/middleware');
 const rf = require('./src/route-function')
 

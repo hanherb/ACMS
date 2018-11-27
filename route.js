@@ -4,13 +4,10 @@ var cookieSession = require('cookie-session');
 var jwt = require('jsonwebtoken');
 var mongodb = require('mongodb');
 var mongo = require('./src/mongo-connect');
-var fs = require('fs');
 var middle = require('./src/middleware');
 var rf = require('./src/route-function');
 var router = express.Router();
-router.route('/').get(function (req, res) {
-    res.redirect('http://localhost:3001/');
-});
+router.route('/').get(function (req, res) { res.redirect('http://localhost:3001/'); });
 router.route('/get-user').get(function (req, res) { rf.getUser(req, res); });
 router.route('/register-user').get(function (req, res) { rf.registerUser(req, res); });
 router.route('/login-user').get(function (req, res) { rf.loginUser(req, res); });

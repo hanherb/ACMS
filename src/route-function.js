@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 const mongodb = require('mongodb');
 const mongo = require('./mongo-connect');
 
@@ -62,7 +63,10 @@ exports.checkSession = function(req, res) {
 		let query = {email: req.session.email};
 		mongo.mongoUser("session", query, function(response) {
 			if(response) {
-				rf.assignSession(req, res, response[0]);
+				req.session.email = response[0].email
+				req.session.fullname = response[0].fullname;
+				req.session.role = response[0].role;
+				req.session.authority = response[0].authority;
 			}
 		});
 		console.log(req.session);
