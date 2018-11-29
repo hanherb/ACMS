@@ -3,6 +3,7 @@ var mongo = require('./mongo-connect');
 var {buildSchema} = require('graphql');
 var mergeSchema = require('graphql-tools');
 var blogGraphql = require('../plugin/blog/blog-graphql');
+var commerceGraphql = require('../plugin/commerce/commerce-graphql');
 
 var defaultSchema = buildSchema(`
 	type Query {
@@ -82,6 +83,7 @@ var defaultSchema = buildSchema(`
 var schemas = [];
 schemas.push(defaultSchema);
 schemas.push(blogGraphql.schema);
+schemas.push(commerceGraphql.schema);
 
 exports.schema = mergeSchema.mergeSchemas({
   schemas: schemas
@@ -132,6 +134,8 @@ exports.root = {
 	plugins: getPlugins,
 	blog: blogGraphql.root.blog,
 	blogs: blogGraphql.root.blogs,
+	commerce: commerceGraphql.root.commerce,
+	commerces: commerceGraphql.root.commerces,
 	updateUser: function({email, input}) {
 		var userEmail = email;
 	  	for(var i = 0; i < users.length; i++) {
@@ -165,5 +169,8 @@ exports.root = {
 	},
 	updateBlog: blogGraphql.root.updateBlog,
 	createBlog: blogGraphql.root.createBlog,
-	deleteBlog: blogGraphql.root.deleteBlog
+	deleteBlog: blogGraphql.root.deleteBlog,
+	updateCommerce: commerceGraphql.root.updateCommerce,
+	createCommerce: commerceGraphql.root.createCommerce,
+	deleteCommerce: commerceGraphql.root.deleteCommerce,
 };

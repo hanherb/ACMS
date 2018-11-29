@@ -37,6 +37,12 @@ router.route('/update-post').get(function(req, res) {rf.updatePost(req, res)});
 
 router.route('/delete-post').get(function(req, res) {rf.deletePost(req, res)});
 
+router.route('/add-item').get(function(req, res) {rf.addItem(req, res)});
+
+router.route('/update-item').get(function(req, res) {rf.updateItem(req, res)});
+
+router.route('/delete-item').get(function(req, res) {rf.deleteItem(req, res)});
+
 router.route('/logout').get(function(req, res) {rf.logout(req, res)});
 
 module.exports = router;

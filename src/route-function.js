@@ -112,8 +112,9 @@ exports.addPost = function(req, res) {
 		date: req.query.date,
 		month: req.query.month,
 		year: req.query.year,
-		author: req.session.fullname
+		author: req.query.author
 	}
+	console.log(obj.author);
 	mongo.mongoBlog("insert-one", obj, function(response) {
 		res.json(response);
 	});
@@ -129,6 +130,33 @@ exports.updatePost = function(req, res) {
 exports.deletePost = function(req, res) {
 	let query = {title: req.query.title};
 	mongo.mongoBlog("delete-one", query, function(response) {
+		res.json(response);
+	});
+}
+
+exports.addItem = function(req, res) {
+	let obj = {
+		name: req.query.name,
+		price: req.query.price,
+		qty: req.query.qty,
+		description: req.query.description,
+		user: req.query.user
+	}
+	mongo.mongoCommerce("insert-one", obj, function(response) {
+		res.json(response);
+	});
+}
+
+exports.updateItem = function(req, res) {
+	let query = [{name: req.query.old}, {$set: {name: req.query.name, price: req.query.price, qty: req.query.qty, description: req.query.description}}];
+	mongo.mongoCommerce("update-one", query, function(response) {
+		res.json(response);
+	});
+}
+
+exports.deleteItem = function(req, res) {
+	let query = {name: req.query.name};
+	mongo.mongoCommerce("delete-one", query, function(response) {
 		res.json(response);
 	});
 }
