@@ -17,7 +17,8 @@ var defaultSchema = buildSchema(`
 	    fullname: String,
 	    email: String,
 	    role: String,
-	    authority: Authority 
+	    authority: Authority,
+	    balance: Int
   	},
 
   	type Authority {
@@ -54,7 +55,8 @@ var defaultSchema = buildSchema(`
 	    email: String,
 	    role: String,
 	    authority: AuthorityInput,
-	    password: String
+	    password: String,
+	    balance: Int
   	},
 
   	input AuthorityInput {
@@ -140,7 +142,22 @@ exports.root = {
 		var userEmail = email;
 	  	for(var i = 0; i < users.length; i++) {
 		  	if(userEmail == users[i].email) {
+		  		let email = users[i].email;
+		  		let fullname = users[i].fullname;
+		  		let role = users[i].role;
+		  		let authority = users[i].authority;
+		  		let balance = users[i].balance;
 		  		users[i] = input;
+		  		if(users[i].email == undefined)
+		  			users[i].email = email;
+		  		if(users[i].fullname == undefined)
+		  			users[i].fullname = fullname;
+		  		if(users[i].role == undefined)
+		  			users[i].role = role;
+		  		if(users[i].authority == undefined)
+		  			users[i].authority = authority;
+		  		if(users[i].balance == undefined)
+		  			users[i].balance = balance;
 		  		return input;
 		  	}
 		}

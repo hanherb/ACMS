@@ -15,7 +15,8 @@ exports.registerUser = function(req, res) {
 		fullname: req.query.fullname,
 		password: req.query.password,
 		role: req.query.role,
-		authority: req.query.authority
+		authority: req.query.authority,
+		balance: req.query.balance
 	};
 	mongo.mongoUser("insert-one", obj, function(response) {
 		res.json(response.insertedCount);
@@ -35,6 +36,7 @@ exports.loginUser = function(req, res) {
 			req.session.fullname = response[0].fullname;
 			req.session.role = response[0].role;
 			req.session.authority = response[0].authority;
+			req.session.balance = response[0].balance;
 			console.log(req.session);
 			res.json(response[0]);
 		}
@@ -140,7 +142,8 @@ exports.addItem = function(req, res) {
 		price: req.query.price,
 		qty: req.query.qty,
 		description: req.query.description,
-		user: req.query.user
+		user: req.query.user,
+		image: req.query.image
 	}
 	mongo.mongoCommerce("insert-one", obj, function(response) {
 		res.json(response);
@@ -148,7 +151,7 @@ exports.addItem = function(req, res) {
 }
 
 exports.updateItem = function(req, res) {
-	let query = [{name: req.query.old}, {$set: {name: req.query.name, price: req.query.price, qty: req.query.qty, description: req.query.description}}];
+	let query = [{name: req.query.old}, {$set: {name: req.query.name, price: req.query.price, qty: req.query.qty, description: req.query.description, image: req.query.image}}];
 	mongo.mongoCommerce("update-one", query, function(response) {
 		res.json(response);
 	});
@@ -158,6 +161,16 @@ exports.deleteItem = function(req, res) {
 	let query = {name: req.query.name};
 	mongo.mongoCommerce("delete-one", query, function(response) {
 		res.json(response);
+	});
+}
+
+exports.buyItem = function(req, res) {
+	let query1 = [{name: req.query.name}, {$set: {qty: req.query.qty}}];
+	mongo.mongoCommerce("update-one", query1, function(response1) {
+		let query2 = [{email: req.query.email}, {$set: {balance: parseInt(req.query.balance)}}];
+		mongo.mongoUser("update-one", query2, function(response2) {
+			res.json(response2);
+		});
 	});
 }
 
