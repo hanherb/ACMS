@@ -1,0 +1,3 @@
+{"_id":{"$oid":"5c0cf3c432554517ecfbe4cd"},"doctor_name":"Kuda Terbang","patient_name":"Kepik Daun","fulldate":"9 December 2018 @ 17:51:47"}
+{"_id":{"$oid":"5c0cf5c632554517ecfbe4ce"},"doctor_name":"Kuda Terbang","patient_name":"Kambing Gunung","fulldate":"9 December 2018 @ 18:0:21"}
+{"_id":{"$oid":"5c0cf71b32554517ecfbe4d0"},"doctor_name":"Beruang Madu","patient_name":"Tapir Gembul","fulldate":"9 December 2018 @ 18:6:2"}

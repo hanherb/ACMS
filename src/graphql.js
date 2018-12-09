@@ -4,6 +4,7 @@ var {buildSchema} = require('graphql');
 var mergeSchema = require('graphql-tools');
 var blogGraphql = require('../plugin/blog/blog-graphql');
 var commerceGraphql = require('../plugin/commerce/commerce-graphql');
+var consultGraphql = require('../plugin/consult/consult-graphql');
 
 var defaultSchema = buildSchema(`
 	type Query {
@@ -17,8 +18,7 @@ var defaultSchema = buildSchema(`
 	    fullname: String,
 	    email: String,
 	    role: String,
-	    authority: Authority,
-	    balance: Int
+	    authority: Authority
   	},
 
   	type Authority {
@@ -48,6 +48,7 @@ var defaultSchema = buildSchema(`
 		createUser(input: PersonInput): Person,
 		deleteUser(email: String!): Person,
 		updatePlugin(name: String!, input: PluginInput): Plugin
+		createPlugin(input: PluginInput): Plugin
 	},
 
 	input PersonInput {
@@ -55,8 +56,7 @@ var defaultSchema = buildSchema(`
 	    email: String,
 	    role: String,
 	    authority: AuthorityInput,
-	    password: String,
-	    balance: Int
+	    password: String
   	},
 
   	input AuthorityInput {
@@ -86,6 +86,7 @@ var schemas = [];
 schemas.push(defaultSchema);
 schemas.push(blogGraphql.schema);
 schemas.push(commerceGraphql.schema);
+schemas.push(consultGraphql.schema);
 
 exports.schema = mergeSchema.mergeSchemas({
   schemas: schemas
@@ -138,6 +139,8 @@ exports.root = {
 	blogs: blogGraphql.root.blogs,
 	commerce: commerceGraphql.root.commerce,
 	commerces: commerceGraphql.root.commerces,
+	consult: consultGraphql.root.consult,
+	consults: consultGraphql.root.consults,
 	updateUser: function({email, input}) {
 		var userEmail = email;
 	  	for(var i = 0; i < users.length; i++) {
@@ -146,7 +149,6 @@ exports.root = {
 		  		let fullname = users[i].fullname;
 		  		let role = users[i].role;
 		  		let authority = users[i].authority;
-		  		let balance = users[i].balance;
 		  		users[i] = input;
 		  		if(users[i].email == undefined)
 		  			users[i].email = email;
@@ -156,8 +158,6 @@ exports.root = {
 		  			users[i].role = role;
 		  		if(users[i].authority == undefined)
 		  			users[i].authority = authority;
-		  		if(users[i].balance == undefined)
-		  			users[i].balance = balance;
 		  		return input;
 		  	}
 		}
@@ -175,6 +175,10 @@ exports.root = {
 		  	}
 		}
 	},
+	createPlugin: function({input}) {
+		plugins.push(input);
+		return input;
+	},
 	updatePlugin: function({name, input}) {
 		var pluginName = name;
 		for(var i = 0; i < plugins.length; i++) {
@@ -190,4 +194,7 @@ exports.root = {
 	updateCommerce: commerceGraphql.root.updateCommerce,
 	createCommerce: commerceGraphql.root.createCommerce,
 	deleteCommerce: commerceGraphql.root.deleteCommerce,
+	updateConsult: consultGraphql.root.updateConsult,
+	createConsult: consultGraphql.root.createConsult,
+	deleteConsult: consultGraphql.root.deleteConsult
 };

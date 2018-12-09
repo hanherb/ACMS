@@ -45,6 +45,8 @@ router.route('/delete-item').get(function(req, res) {rf.deleteItem(req, res)});
 
 router.route('/buy-item').get(function(req, res) {rf.buyItem(req, res)});
 
+router.route('/add-consult').get(function(req, res) {rf.addConsult(req, res)});
+
 router.route('/logout').get(function(req, res) {rf.logout(req, res)});
 
 module.exports = router;

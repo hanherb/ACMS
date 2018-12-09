@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const mongodb = require('mongodb');
 const mongo = require('./mongo-connect');
+const Promise = require('promise');
 
 exports.getUser = function(req, res) {
 	mongo.mongoUser("find", {}, function(response) {
@@ -15,8 +16,7 @@ exports.registerUser = function(req, res) {
 		fullname: req.query.fullname,
 		password: req.query.password,
 		role: req.query.role,
-		authority: req.query.authority,
-		balance: req.query.balance
+		authority: req.query.authority
 	};
 	mongo.mongoUser("insert-one", obj, function(response) {
 		res.json(response.insertedCount);
@@ -36,7 +36,6 @@ exports.loginUser = function(req, res) {
 			req.session.fullname = response[0].fullname;
 			req.session.role = response[0].role;
 			req.session.authority = response[0].authority;
-			req.session.balance = response[0].balance;
 			console.log(req.session);
 			res.json(response[0]);
 		}
@@ -92,13 +91,30 @@ exports.listPlugin = function(req, res) {
 
 exports.addPlugin = function(req, res) {
 	let plugin = req.query.plugin;
-	for(let i = 0; i < plugin.name.length; i++) {
-		let query = [{name: plugin.name[i]}, {$set: {name: plugin.name[i], status: plugin.status[i]}}, {upsert: true}];
-		mongo.mongoPlugin("update", query, function(response) {
-			
-		});
+	let newPlugin = '';
+	for(let i = 0; i <= plugin.name.length; i++) {
+		if(i < plugin.name.length) {
+			let query = [{name: plugin.name[i]}, {$set: {name: plugin.name[i], status: plugin.status[i]}}, {upsert: true}];
+			mongo.mongoPlugin("update", query, function(response) {
+				if(response.result.upserted) {
+					newPlugin = {
+						name: plugin.name[i],
+						status: plugin.status[i]
+					};
+					console.log(newPlugin);
+				}
+			});
+		}
+		else {
+			setTimeout(function() {
+				console.log(newPlugin);
+				if(newPlugin == '')
+					res.json(1)
+				else 
+					res.json(newPlugin);
+			}, 2000);
+		}
 	}
-	res.json(1);
 }
 
 exports.listBlog = function(req, res) {
@@ -165,12 +181,20 @@ exports.deleteItem = function(req, res) {
 }
 
 exports.buyItem = function(req, res) {
-	let query1 = [{name: req.query.name}, {$set: {qty: req.query.qty}}];
-	mongo.mongoCommerce("update-one", query1, function(response1) {
-		let query2 = [{email: req.query.email}, {$set: {balance: parseInt(req.query.balance)}}];
-		mongo.mongoUser("update-one", query2, function(response2) {
-			res.json(response2);
-		});
+	let query = [{name: req.query.name}, {$set: {qty: req.query.qty}}];
+	mongo.mongoCommerce("update-one", query, function(response) {
+		res.json(response);
+	});
+}
+
+exports.addConsult = function(req, res) {
+	let obj = {
+		doctor_name: req.query.doctor_name,
+		patient_name: req.query.patient_name,
+		fulldate: req.query.fulldate
+	}
+	mongo.mongoConsult("insert-one", obj, function(response) {
+		res.json(response);
 	});
 }
 
