@@ -4,7 +4,7 @@ var {buildSchema} = require('graphql');
 
 exports.schema = buildSchema(`
 	type Query {
-		consult(doctor_name: String!): Consult,
+		consult(patient_name: String!): Consult,
 		consults: [Consult]
 	},
 
@@ -17,7 +17,7 @@ exports.schema = buildSchema(`
   	},
 
   	type Mutation {
-		updateConsult(doctor_name: String!, input: ConsultInput): Consult,
+		updateConsult(patient_name: String!, input: ConsultInput): Consult,
 		createConsult(input: ConsultInput): Consult,
 		deleteConsult(doctor_name: String!): Consult
 	},
@@ -38,9 +38,9 @@ mongo.mongoConsult("find", {}, function(response) {
 });
 
 var getConsult = function(args) {
-	var doctorName = args.doctor_name;
+	var patientName = args.patient_name;
   	for(var i = 0; i < consults.length; i++) {
-	  	if(doctorName == consults[i].doctor_name) {
+	  	if(patientName == consults[i].patient_name) {
 	  		return consults[i];
 	  	}
 	}
@@ -50,10 +50,25 @@ var getConsults = function() {
 	return consults;
 }
 
-var updateConsultFunction = function({doctor_name, input}) {
-	var doctorName = doctor_name;
+var updateConsultFunction = function({patient_name, input}) {
+	var patientName = patient_name;
   	for(var i = 0; i < consults.length; i++) {
-	  	if(doctorName == consults[i].doctor_name) {
+	  	if(patientName == consults[i].patient_name) {
+	  		// let patient_name = consults[i].patient_name;
+	  		// let doctor_name = consults[i].doctor_name;
+	  		// let fulldate = consults[i].fulldate;
+	  		// let diagnosis = consults[i].diagnosis;
+	  		// let medicine = consults[i].medicine;
+	  		// if(consults[i].patient_name == undefined)
+	  		// 	consults[i].patient_name = patient_name;
+	  		// if(consults[i].doctor_name == undefined)
+	  		// 	consults[i].doctor_name = doctor_name;
+	  		// if(consults[i].fulldate == undefined)
+	  		// 	consults[i].fulldate = fulldate;
+	  		// if(consults[i].diagnosis == undefined)
+	  		// 	consults[i].diagnosis = diagnosis;
+	  		// if(consults[i].medicine == undefined)
+	  		// 	consults[i].medicine = medicine;
 	  		consults[i] = input;
 	  		return input;
 	  	}
