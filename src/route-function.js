@@ -193,6 +193,7 @@ exports.addConsult = function(req, res) {
 		patient_name: req.query.patient_name,
 		fulldate: req.query.fulldate,
 		medicine: req.query.medicine,
+		status: req.query.status
 	}
 	mongo.mongoConsult("insert-one", obj, function(response) {
 		res.json(response);
@@ -200,7 +201,7 @@ exports.addConsult = function(req, res) {
 }
 
 exports.updateConsult = function(req, res) {
-	let query = [{patient_name: req.query.patient_name}, {$set: {patient_name: req.query.patient_name, doctor_name: req.query.doctor_name, fulldate: req.query.fulldate, medicine: req.query.medicine}}];
+	let query = [{patient_name: req.query.patient_name}, {$set: {patient_name: req.query.patient_name, doctor_name: req.query.doctor_name, fulldate: req.query.fulldate, medicine: req.query.medicine, status: req.query.status}}];
 	mongo.mongoConsult("update-one", query, function(response) {
 		res.json(response);
 	});

@@ -13,7 +13,8 @@ exports.schema = buildSchema(`
   		doctor_name: String,
   		fulldate: String,
   		diagnosis: String,
-  		medicine: String
+  		medicine: [String],
+  		status : String
   	},
 
   	type Mutation {
@@ -27,7 +28,8 @@ exports.schema = buildSchema(`
   		doctor_name: String,
   		fulldate: String,
   		diagnosis: String,
-  		medicine: String
+  		medicine: [String],
+  		status : String
   	}
 `);
 
@@ -54,21 +56,6 @@ var updateConsultFunction = function({patient_name, input}) {
 	var patientName = patient_name;
   	for(var i = 0; i < consults.length; i++) {
 	  	if(patientName == consults[i].patient_name) {
-	  		// let patient_name = consults[i].patient_name;
-	  		// let doctor_name = consults[i].doctor_name;
-	  		// let fulldate = consults[i].fulldate;
-	  		// let diagnosis = consults[i].diagnosis;
-	  		// let medicine = consults[i].medicine;
-	  		// if(consults[i].patient_name == undefined)
-	  		// 	consults[i].patient_name = patient_name;
-	  		// if(consults[i].doctor_name == undefined)
-	  		// 	consults[i].doctor_name = doctor_name;
-	  		// if(consults[i].fulldate == undefined)
-	  		// 	consults[i].fulldate = fulldate;
-	  		// if(consults[i].diagnosis == undefined)
-	  		// 	consults[i].diagnosis = diagnosis;
-	  		// if(consults[i].medicine == undefined)
-	  		// 	consults[i].medicine = medicine;
 	  		consults[i] = input;
 	  		return input;
 	  	}
