@@ -140,6 +140,8 @@ exports.root = {
 	commerce: commerceGraphql.root.commerce,
 	commerces: commerceGraphql.root.commerces,
 	consult: consultGraphql.root.consult,
+	consultPending: consultGraphql.root.consultPending,
+	consultMed: consultGraphql.root.consultMed,
 	consults: consultGraphql.root.consults,
 	updateUser: function({email, input}) {
 		var userEmail = email;

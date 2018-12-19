@@ -191,7 +191,7 @@ exports.addConsult = function(req, res) {
 	let obj = {
 		doctor_name: req.query.doctor_name,
 		patient_name: req.query.patient_name,
-		fulldate: req.query.fulldate,
+		checkin_date: req.query.checkin_date,
 		medicine: req.query.medicine,
 		status: req.query.status
 	}
@@ -201,8 +201,30 @@ exports.addConsult = function(req, res) {
 }
 
 exports.updateConsult = function(req, res) {
-	let query = [{patient_name: req.query.patient_name}, {$set: {patient_name: req.query.patient_name, doctor_name: req.query.doctor_name, fulldate: req.query.fulldate, medicine: req.query.medicine, status: req.query.status}}];
+	let query = [{patient_name: req.query.patient_name}, {$set: {patient_name: req.query.patient_name, doctor_name: req.query.doctor_name, checkin_date: req.query.checkin_date, medicine: req.query.medicine, status: req.query.status}}];
 	mongo.mongoConsult("update-one", query, function(response) {
+		res.json(response);
+	});
+}
+
+exports.updatePendingConsult = function(req, res) {
+	let query = [{patient_name: req.query.patient_name, status: req.query.status}, {$set: {patient_name: req.query.patient_name, doctor_name: req.query.doctor_name, checkin_date: req.query.checkin_date, medicine: req.query.medicine, status: req.query.status}}];
+	mongo.mongoConsult("update-one", query, function(response) {
+		res.json(response);
+	});
+}
+
+exports.updateStatusConsult = function(req, res) {
+	let query = [{patient_name: req.query.patient_name, status: req.query.prevStatus}, {$set: {patient_name: req.query.patient_name, status: req.query.status}}];
+	mongo.mongoConsult("update-one", query, function(response) {
+		res.json(response);
+	});
+}
+
+exports.addConsultDate = function(req, res) {
+	let query = [{patient_name: req.query.patient_name, status: req.query.status}, {$set: {patient_name: req.query.patient_name, consult_date: req.query.consult_date}}];
+	mongo.mongoConsult("update-one", query, function(response) {
+		console.log(response);
 		res.json(response);
 	});
 }

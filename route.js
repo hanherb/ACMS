@@ -27,5 +27,8 @@ router.route('/delete-item').get(function (req, res) { rf.deleteItem(req, res); 
 router.route('/buy-item').get(function (req, res) { rf.buyItem(req, res); });
 router.route('/add-consult').get(function (req, res) { rf.addConsult(req, res); });
 router.route('/update-consult').get(function (req, res) { rf.updateConsult(req, res); });
+router.route('/update-pending-consult').get(function (req, res) { rf.updatePendingConsult(req, res); });
+router.route('/update-status-consult').get(function (req, res) { rf.updateStatusConsult(req, res); });
+router.route('/add-consult-date').get(function (req, res) { rf.addConsultDate(req, res); });
 router.route('/logout').get(function (req, res) { rf.logout(req, res); });
 module.exports = router;
