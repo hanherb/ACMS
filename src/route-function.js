@@ -187,6 +187,18 @@ exports.buyItem = function(req, res) {
 	});
 }
 
+exports.addTransaction = function(req, res) {
+	let obj = {
+		patient_name: req.query.patient_name,
+		medicine: req.query.medicine,
+		transaction_date: req.query.transaction_date,
+		price: parseInt(req.query.price)
+	}
+	mongo.mongoTransaction("insert-one", obj, function(response) {
+		res.json(response);
+	});
+}
+
 exports.addConsult = function(req, res) {
 	let obj = {
 		doctor_name: req.query.doctor_name,
@@ -207,7 +219,7 @@ exports.updateConsult = function(req, res) {
 	});
 }
 
-exports.updatePendingConsult = function(req, res) {
+exports.updateSpecificConsult = function(req, res) {
 	let query = [{patient_name: req.query.patient_name, status: req.query.status}, {$set: {patient_name: req.query.patient_name, doctor_name: req.query.doctor_name, checkin_date: req.query.checkin_date, medicine: req.query.medicine, status: req.query.status}}];
 	mongo.mongoConsult("update-one", query, function(response) {
 		res.json(response);
@@ -225,6 +237,25 @@ exports.addConsultDate = function(req, res) {
 	let query = [{patient_name: req.query.patient_name, status: req.query.status}, {$set: {patient_name: req.query.patient_name, consult_date: req.query.consult_date}}];
 	mongo.mongoConsult("update-one", query, function(response) {
 		console.log(response);
+		res.json(response);
+	});
+}
+
+exports.addSupply = function(req, res) {
+	let obj = {
+		supplier_name: req.query.supplier_name,
+		medicine: req.query.medicine,
+		qty: req.query.qty,
+		supply_date: req.query.supply_date
+	}
+	mongo.mongoSupply("insert-one", obj, function(response) {
+		res.json(response);
+	});
+}
+
+exports.itemSupplied = function(req, res) {
+	let query = [{name: req.query.medicine}, {$set: {qty: req.query.qty}}];
+	mongo.mongoCommerce("update-one", query, function(response) {
 		res.json(response);
 	});
 }

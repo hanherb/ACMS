@@ -191,6 +191,50 @@ exports.mongoCommerce = function(action, query, callback) {
 	});
 }
 
+exports.mongoTransaction = function(action, query, callback) {
+	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+		if(err) {
+			console.log("Error: ", err);
+		}
+		else {
+			var dbo = db.db("acms");
+
+			if(action == "insert-one") {
+				console.log("Connection Established. Action="+action);
+				dbo.collection("transaction").insertOne(query, function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "find") {
+				dbo.collection("transaction").find({}).toArray(function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "update-one") {
+				dbo.collection("transaction").updateOne(query[0], query[1], function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+
+			else if(action == "delete-one") {
+				dbo.collection("transaction").deleteOne(query, function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+		}
+	});
+}
+
 exports.mongoConsult = function(action, query, callback) {
 	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
 		if(err) {
@@ -226,6 +270,50 @@ exports.mongoConsult = function(action, query, callback) {
 
 			else if(action == "delete-one") {
 				dbo.collection("consult").deleteOne(query, function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+		}
+	});
+}
+
+exports.mongoSupply = function(action, query, callback) {
+	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+		if(err) {
+			console.log("Error: ", err);
+		}
+		else {
+			var dbo = db.db("acms");
+
+			if(action == "insert-one") {
+				console.log("Connection Established. Action="+action);
+				dbo.collection("supply").insertOne(query, function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "find") {
+				dbo.collection("supply").find({}).toArray(function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "update-one") {
+				dbo.collection("supply").updateOne(query[0], query[1], function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+
+			else if(action == "delete-one") {
+				dbo.collection("supply").deleteOne(query, function(err, result) {
 					if(callback)
 						return callback(result);
 					db.close();
