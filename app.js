@@ -10,6 +10,7 @@ var express_graphql = require('express-graphql');
 var graphvar = require('./src/graphql');
 var cors = require('cors');
 var middle = require('./src/middleware');
+var address = 'http://141.136.47.202';
 
 app.use('/graphql', cors(), express_graphql({
 	schema: graphvar.schema,
@@ -25,7 +26,7 @@ app.use(session({
 }))
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+    res.setHeader('Access-Control-Allow-Origin', address+ ':3001');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE, navPlugin');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true);
