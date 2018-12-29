@@ -5,7 +5,7 @@ var TortoiseDB = require('tortoisedb');
 
 const torApp = new TortoiseDB({
 	name: 'acms',
-	port: 4040,
+	port: 4000,
 	mongoURI: 'mongodb://localhost:27017',
 	batchLimit: 1000
 });
