@@ -6,7 +6,7 @@ const mongodb = require('mongodb');
 const mongo = require('./src/mongo-connect');
 const middle = require('./src/middleware');
 const rf = require('./src/route-function')
-const address = 'http://141.136.47.202';
+const address = 'http://localhost';
 
 const router = express.Router();
 

@@ -10,6 +10,7 @@ var express_graphql = require('express-graphql');
 var graphvar = require('./src/graphql');
 var cors = require('cors');
 var middle = require('./src/middleware');
+
 var address = 'http://141.136.47.202';
 
 app.use('/graphql', cors(), express_graphql({
@@ -25,10 +26,8 @@ app.use(session({
   cookie: { secure: false }
 }))
 
-app.use(cors());
-
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', address + ':3001');
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE, navPlugin');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -43,7 +42,8 @@ app.use(express.static(__dirname + '/public',{ redirect : false }));
 app.use(express.static(__dirname + '/plugin',{ redirect : false }));
 
 var server = app.listen(3000, function () {
-	var port = server.address().port;
+  var port = server.address().port;
+	var address = server.address().address;
 
-  	console.log('App listening at port:', port);
+  	console.log('App listening at port:', address + port);
 });

@@ -6,7 +6,7 @@ var mongodb = require('mongodb');
 var mongo = require('./src/mongo-connect');
 var middle = require('./src/middleware');
 var rf = require('./src/route-function');
-var address = 'http://141.136.47.202';
+var address = 'http://localhost';
 var router = express.Router();
 router.route('/').get(function (req, res) { res.redirect(address + ':3001/'); });
 router.route('/get-user').get(function (req, res) { rf.getUser(req, res); });
