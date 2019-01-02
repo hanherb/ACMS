@@ -36,7 +36,11 @@ var defaultSchema = buildSchema(`
 
   	type AuthorityApi {
   		user: Int,
-  		plugin: Int
+  		blog: Int,
+  		commerce: Int,
+  		consult: Int,
+  		supply: Int,
+  		report: Int
   	},
 
   	type Plugin {
@@ -74,7 +78,11 @@ var defaultSchema = buildSchema(`
 
   	input AuthorityApiInput {
   		user: Int,
-  		plugin: Int
+  		blog: Int,
+  		commerce: Int,
+  		consult: Int,
+  		supply: Int,
+  		report: Int
   	},
 
   	input PluginInput {
