@@ -4,6 +4,11 @@ const mongodb = require('mongodb');
 const mongo = require('./mongo-connect');
 const Promise = require('promise');
 
+exports.redirectIndex = function(req, res) {
+	var currentUrl = 'http://' + req.get('host').split(":")[0];
+	res.redirect(currentUrl + ':3001/')
+}
+
 exports.getUser = function(req, res) {
 	mongo.mongoUser("find", {}, function(response) {
 		res.json(response);
