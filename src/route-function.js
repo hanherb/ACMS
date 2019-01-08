@@ -94,6 +94,12 @@ exports.listPlugin = function(req, res) {
 	});
 }
 
+exports.getPlugin = function(req, res) {
+	mongo.mongoPlugin("find", {}, function(response) {
+		res.json(response);
+	});
+}
+
 exports.addPlugin = function(req, res) {
 	let plugin = req.query.plugin;
 	let newPlugin = '';
