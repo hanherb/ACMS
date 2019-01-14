@@ -11,41 +11,26 @@ var defaultSchema = buildSchema(`
 	type Query {
 		user(email: String!): Person,
 		users: [Person],
+		roles: [Role],
 		plugin(name: String!): Plugin,
 		plugins: [Plugin],
 	},
 
 	type Person {
+		_id: String,
 	    fullname: String,
 	    email: String,
 	    role: String,
-	    authority: Authority
-  	},
-
-  	type Authority {
-  		user: AuthorityUser,
-  		api: AuthorityApi
-  	},
-
-  	type AuthorityUser {
-  		read: Int,
-  		create: Int,
-  		update: Int,
-  		delete: Int
-  	},
-
-  	type AuthorityApi {
-  		user: Int,
-  		blog: Int,
-  		commerce: Int,
-  		consult: Int,
-  		supply: Int,
-  		report: Int
+	    authority: [String]
   	},
 
   	type Plugin {
   		name: String,
   		status: Int
+  	},
+
+  	type Role {
+		role_name: String
   	},
 
   	type Mutation {
@@ -57,32 +42,12 @@ var defaultSchema = buildSchema(`
 	},
 
 	input PersonInput {
+		_id: String,
 	    fullname: String,
 	    email: String,
 	    role: String,
-	    authority: AuthorityInput,
+	    authority: [String],
 	    password: String
-  	},
-
-  	input AuthorityInput {
-  		user: AuthorityUserInput,
-  		api: AuthorityApiInput
-  	},
-
-  	input AuthorityUserInput {
-  		read: Int,
-  		create: Int,
-  		update: Int,
-  		delete: Int
-  	},
-
-  	input AuthorityApiInput {
-  		user: Int,
-  		blog: Int,
-  		commerce: Int,
-  		consult: Int,
-  		supply: Int,
-  		report: Int
   	},
 
   	input PluginInput {
@@ -108,6 +73,12 @@ mongo.mongoUser("find", {}, function(response) {
 		users.push(response[i]);
 });
 
+var roles = [];
+mongo.mongoRole("find", {}, function(response) {
+	for(var i = 0; i < response.length; i++)
+		roles.push(response[i]);
+});
+
 var plugins = [];
 mongo.mongoPlugin("find", {}, function(response) {
 	for(var i = 0; i < response.length; i++)
@@ -127,6 +98,10 @@ var getUsers = function() {
 	return users;
 }
 
+var getRoles = function() {
+	return roles;
+}
+
 var getPlugin = function(args) {
 	var pluginName = args.name;
   	for(var i = 0; i < plugins.length; i++) {
@@ -144,11 +119,14 @@ var updateUserFunction = function({email, input}) {
 	var userEmail = email;
   	for(var i = 0; i < users.length; i++) {
 	  	if(userEmail == users[i].email) {
+	  		let id = users[i]._id;
 	  		let email = users[i].email;
 	  		let fullname = users[i].fullname;
 	  		let role = users[i].role;
 	  		let authority = users[i].authority;
 	  		users[i] = input;
+	  		if(users[i]._id == undefined)
+	  			users[i]._id = id;
 	  		if(users[i].email == undefined)
 	  			users[i].email = email;
 	  		if(users[i].fullname == undefined)
@@ -196,6 +174,7 @@ var updatePluginFunction = function({name, input}) {
 exports.root = {
 	user: getUser,
 	users: getUsers,
+	roles: getRoles,
 	plugin: getPlugin,
 	plugins: getPlugins,
 	blog: blogGraphql.root.blog,

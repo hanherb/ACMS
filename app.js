@@ -1,8 +1,8 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var route = require('./route.js');
-var session = require('express-session');
 var mongodb = require('mongodb');
 var mongo = require('./src/mongo-connect');
 var fs = require('fs');
@@ -13,28 +13,28 @@ var middle = require('./src/middleware');
 
 var address = 'http://141.136.47.202';
 
+app.use(cors());
+
 app.use('/graphql', cors(), express_graphql({
 	schema: graphvar.schema,
 	rootValue: graphvar.root,
 	graphiql: true
 }));
 
-app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-app.use(session({
-  secret: 'kuda',
-  cookie: { secure: false }
-}))
+app.use(cookieParser());
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE, navPlugin');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Access-Control-Allow-Headers, Accept, Authorization');
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
 
-app.all('*', middle.verifyToken, middle.apiAuthCheck);
+app.all('*', middle.verifyToken);
 
 app.use('/', route);
 

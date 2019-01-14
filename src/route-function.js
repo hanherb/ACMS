@@ -1,27 +1,29 @@
+const express = require('express');
+const app = express();
+const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const mongodb = require('mongodb');
 const mongo = require('./mongo-connect');
-const Promise = require('promise');
+
+app.use(cookieParser());
 
 exports.redirectIndex = function(req, res) {
 	var currentUrl = 'http://' + req.get('host').split(":")[0];
-	res.redirect(currentUrl + ':3001/')
+	res.redirect(currentUrl + ':8080/')
 }
 
 exports.getUser = function(req, res) {
-	mongo.mongoUser("find", {}, function(response) {
-		res.json(response);
-	});
+	res.json(1);
 }
 
 exports.registerUser = function(req, res) {
 	let obj = {
-		email: req.query.email,
-		fullname: req.query.fullname,
-		password: req.query.password,
-		role: req.query.role,
-		authority: req.query.authority
+		email: req.body.email,
+		fullname: req.body.fullname,
+		password: req.body.password,
+		role: req.body.role,
+		authority: req.body.authority
 	};
 	mongo.mongoUser("insert-one", obj, function(response) {
 		res.json(response.insertedCount);
@@ -29,20 +31,16 @@ exports.registerUser = function(req, res) {
 }
 
 exports.loginUser = function(req, res) {
-	let query = {email: req.query.email, password: req.query.password};
+	let query = {email: req.body.email, password: req.body.password};
 	mongo.mongoUser("find-query", query, function(response) {
 		if(response[0]) {
-			let token = jwt.sign({user: response[0]},
-		    	'kuda',
-		      	{expiresIn: '24h'}
-		    );
-	        res.cookie('jwtToken', token);
-			req.session.email = response[0].email
-			req.session.fullname = response[0].fullname;
-			req.session.role = response[0].role;
-			req.session.authority = response[0].authority;
-			console.log(req.session);
-			res.json(response[0]);
+			jwt.sign({
+				id: response[0]._id,
+				email: response[0].email
+			},
+	    	'kuda', {expiresIn: '24h'}, (err, token) => {
+	    		res.json({token, response: response[0]});
+	      	});
 		}
 		else {
 			res.json("Login error");
@@ -51,17 +49,21 @@ exports.loginUser = function(req, res) {
 }
 
 exports.updateUser = function(req, res) {
-	let query = [{email: req.query.email}, {$set: {fullname: req.query.fullname, role: req.query.role, authority: req.query.authority}}];
+	let query = [{email: req.body.email}, {$set: {fullname: req.body.fullname, role: req.body.role, authority: req.body.authority}}];
 	mongo.mongoUser("update-one", query, function(response) {
 		res.json(response);
 	});
 }
 
 exports.deleteUser = function(req, res) {
-	let query = {email: req.query.email};
+	let query = {email: req.body.email};
 	mongo.mongoUser("delete-one", query, function(response) {
 		res.json(response);
 	});
+}
+
+exports.getRole = function(req, res) {
+	res.json(1);
 }
 
 exports.checkSession = function(req, res) {
@@ -128,10 +130,8 @@ exports.addPlugin = function(req, res) {
 	}
 }
 
-exports.listBlog = function(req, res) {
-	mongo.mongoBlog("find", {}, function(response) {
-		res.json(response);
-	});
+exports.getBlog = function(req, res) {
+	res.json(1);
 }
 
 exports.addPost = function(req, res) {
@@ -161,6 +161,10 @@ exports.deletePost = function(req, res) {
 	mongo.mongoBlog("delete-one", query, function(response) {
 		res.json(response);
 	});
+}
+
+exports.getCommerce = function(req, res) {
+	res.json(1);
 }
 
 exports.addItem = function(req, res) {
@@ -198,6 +202,10 @@ exports.buyItem = function(req, res) {
 	});
 }
 
+exports.getTransaction = function(req, res) {
+	res.json(1);
+}
+
 exports.addTransaction = function(req, res) {
 	let obj = {
 		patient_name: req.query.patient_name,
@@ -208,6 +216,10 @@ exports.addTransaction = function(req, res) {
 	mongo.mongoTransaction("insert-one", obj, function(response) {
 		res.json(response);
 	});
+}
+
+exports.getConsult = function(req, res) {
+	res.json(1);
 }
 
 exports.addConsult = function(req, res) {
@@ -250,6 +262,10 @@ exports.addConsultDate = function(req, res) {
 		console.log(response);
 		res.json(response);
 	});
+}
+
+exports.getSupply = function(req, res) {
+	res.json(1);
 }
 
 exports.addSupply = function(req, res) {

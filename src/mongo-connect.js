@@ -75,6 +75,26 @@ exports.mongoUser = function(action, query, callback) {
 	});
 }
 
+exports.mongoRole = function(action, query, callback) {
+	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+		if(err) {
+			console.log("Error: ", err);
+		}
+		else {
+			var dbo = db.db("acms");
+
+			if(action == "find") {
+				console.log("Connection Established. Action="+action);
+				dbo.collection("role").find({}).toArray(function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+		}
+	});
+}
+
 exports.mongoPlugin = function(action, query, callback) {
 	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
 		if(err) {

@@ -6,6 +6,7 @@
     "@types/express-session": "^1.15.11",
     "@types/jquery": "^3.3.22",
     "@types/node": "^10.12.3",
+    "body-parser": "^1.18.3",
     "connect-redis": "^3.4.0",
     "cookie-parser": "^1.4.3",
     "cookie-session": "^2.0.0-beta.3",
