@@ -29,25 +29,25 @@ router.route('/list-plugin').get(function(req, res) {rf.listPlugin(req, res)});
 
 router.route('/get-plugin').get(function(req, res) {rf.getPlugin(req, res)});
 
-router.route('/add-plugin').get(function(req, res) {rf.addPlugin(req, res)});
+router.route('/add-plugin').post(function(req, res) {rf.addPlugin(req, res)});
 
 router.route('/get-blog').get(function(req, res) {rf.getBlog(req, res)});
 
-router.route('/add-post').get(function(req, res) {rf.addPost(req, res)});
+router.route('/add-post').post(function(req, res) {rf.addPost(req, res)});
 
-router.route('/update-post').get(function(req, res) {rf.updatePost(req, res)});
+router.route('/update-post').post(function(req, res) {rf.updatePost(req, res)});
 
-router.route('/delete-post').get(function(req, res) {rf.deletePost(req, res)});
+router.route('/delete-post').post(function(req, res) {rf.deletePost(req, res)});
 
 router.route('/get-commerce').get(function(req, res) {rf.getCommerce(req, res)});
 
-router.route('/add-item').get(function(req, res) {rf.addItem(req, res)});
+router.route('/add-item').post(function(req, res) {rf.addItem(req, res)});
 
-router.route('/update-item').get(function(req, res) {rf.updateItem(req, res)});
+router.route('/update-item').post(function(req, res) {rf.updateItem(req, res)});
 
-router.route('/delete-item').get(function(req, res) {rf.deleteItem(req, res)});
+router.route('/delete-item').post(function(req, res) {rf.deleteItem(req, res)});
 
-router.route('/buy-item').get(function(req, res) {rf.buyItem(req, res)});
+router.route('/buy-item').post(function(req, res) {rf.buyItem(req, res)});
 
 router.route('/get-transaction').get(function(req, res) {rf.getTransaction(req, res)});
 
@@ -67,9 +67,9 @@ router.route('/add-consult-date').get(function(req, res) {rf.addConsultDate(req,
 
 router.route('/get-supply').get(function(req, res) {rf.getSupply(req, res)});
 
-router.route('/add-supply').get(function(req, res) {rf.addSupply(req, res)});
+router.route('/add-supply').post(function(req, res) {rf.addSupply(req, res)});
 
-router.route('/item-supplied').get(function(req, res) {rf.itemSupplied(req, res)});
+router.route('/item-supplied').post(function(req, res) {rf.itemSupplied(req, res)});
 
 router.route('/logout').get(function(req, res) {rf.logout(req, res)});
 

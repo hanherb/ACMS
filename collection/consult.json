@@ -3,4 +3,3 @@
 {"_id":{"$oid":"5c1397d88e24e70850a1be54"},"doctor_name":"Kuda Terbang","patient_name":"Jerapah Jangkung","medicine":["Chuba","Jenggot","Chuba"],"status":"finished","checkin_date":"14 December 2018 @ 18:45:43","consult_date":"20 December 2018 @ 3:41:56"}
 {"_id":{"$oid":"5c1aba48b5899b1354117256"},"doctor_name":"Kuda Terbang","patient_name":"Kera Sakti","checkin_date":"20 December 2018 @ 4:38:15","medicine":null,"status":"finished","consult_date":"20 December 2018 @ 4:38:37"}
 {"_id":{"$oid":"5c24d1a7e97ef31644af2cc5"},"doctor_name":"Beruang Madu","patient_name":"Kambing Gunung","checkin_date":"27 December 2018 @ 20:21:58","medicine":["Jenggot"],"status":"finished","consult_date":"27 December 2018 @ 20:22:47"}
-{"_id":{"$oid":"5c24d1b4e97ef31644af2cc6"},"doctor_name":null,"patient_name":"Kambing Gunung","checkin_date":null,"medicine":["Chuba"],"status":"finished"}

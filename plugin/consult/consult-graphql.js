@@ -39,8 +39,9 @@ exports.schema = buildSchema(`
 
 var consults = [];
 mongo.mongoConsult("find", {}, function(response) {
-	for(var i = 0; i < response.length; i++)
+	for(var i = 0; i < response.length; i++) {
 		consults.push(response[i]);
+	}
 });
 
 var getConsult = function(args) {

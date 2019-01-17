@@ -28,25 +28,25 @@ exports.mongoUser = function(action, query, callback) {
 			  	});
 			}
 
-			else if(action == "insert-one") {
+			else if(action == "insert") {
 				console.log("Connection Established. Action="+action);
-				dbo.collection("user").insertOne(query, function(err, result) {
+				dbo.collection("user").insert(query, function(err, result) {
 					if(callback)
 						return callback(result);
 			    	db.close();
 			  	});
 			}
 
-			else if(action == "update-one") {
+			else if(action == "update") {
 				console.log("Connection Established. Action="+action);
-				dbo.collection("user").updateOne(query[0], query[1], function(err, result) {
+				dbo.collection("user").update(query[0], query[1], function(err, result) {
 					if(callback)
 						return callback(result);
 					db.close();
 				});
 			}
 
-			else if(action == "delete-one") {
+			else if(action == "delete") {
 				console.log("Connection Established. Action="+action);
 				dbo.collection("user").deleteOne(query, function(err, result) {
 					if(callback)
@@ -131,9 +131,9 @@ exports.mongoBlog = function(action, query, callback) {
 		else {
 			var dbo = db.db("acms");
 
-			if(action == "insert-one") {
+			if(action == "insert") {
 				console.log("Connection Established. Action="+action);
-				dbo.collection("blog").insertOne(query, function(err, result) {
+				dbo.collection("blog").insert(query, function(err, result) {
 					if(callback)
 						return callback(result);
 			    	db.close();
@@ -148,15 +148,15 @@ exports.mongoBlog = function(action, query, callback) {
 			  	});
 			}
 
-			else if(action == "update-one") {
-				dbo.collection("blog").updateOne(query[0], query[1], function(err, result) {
+			else if(action == "update") {
+				dbo.collection("blog").update(query[0], query[1], function(err, result) {
 					if(callback)
 						return callback(result);
 					db.close();
 				});
 			}
 
-			else if(action == "delete-one") {
+			else if(action == "delete") {
 				dbo.collection("blog").deleteOne(query, function(err, result) {
 					if(callback)
 						return callback(result);
@@ -175,9 +175,9 @@ exports.mongoCommerce = function(action, query, callback) {
 		else {
 			var dbo = db.db("acms");
 
-			if(action == "insert-one") {
+			if(action == "insert") {
 				console.log("Connection Established. Action="+action);
-				dbo.collection("commerce").insertOne(query, function(err, result) {
+				dbo.collection("commerce").insert(query, function(err, result) {
 					if(callback)
 						return callback(result);
 			    	db.close();
@@ -192,15 +192,15 @@ exports.mongoCommerce = function(action, query, callback) {
 			  	});
 			}
 
-			else if(action == "update-one") {
-				dbo.collection("commerce").updateOne(query[0], query[1], function(err, result) {
+			else if(action == "update") {
+				dbo.collection("commerce").update(query[0], query[1], function(err, result) {
 					if(callback)
 						return callback(result);
 					db.close();
 				});
 			}
 
-			else if(action == "delete-one") {
+			else if(action == "delete") {
 				dbo.collection("commerce").deleteOne(query, function(err, result) {
 					if(callback)
 						return callback(result);
@@ -219,9 +219,9 @@ exports.mongoTransaction = function(action, query, callback) {
 		else {
 			var dbo = db.db("acms");
 
-			if(action == "insert-one") {
+			if(action == "insert") {
 				console.log("Connection Established. Action="+action);
-				dbo.collection("transaction").insertOne(query, function(err, result) {
+				dbo.collection("transaction").insert(query, function(err, result) {
 					if(callback)
 						return callback(result);
 			    	db.close();
@@ -236,15 +236,15 @@ exports.mongoTransaction = function(action, query, callback) {
 			  	});
 			}
 
-			else if(action == "update-one") {
-				dbo.collection("transaction").updateOne(query[0], query[1], function(err, result) {
+			else if(action == "update") {
+				dbo.collection("transaction").update(query[0], query[1], function(err, result) {
 					if(callback)
 						return callback(result);
 					db.close();
 				});
 			}
 
-			else if(action == "delete-one") {
+			else if(action == "delete") {
 				dbo.collection("transaction").deleteOne(query, function(err, result) {
 					if(callback)
 						return callback(result);
@@ -263,9 +263,9 @@ exports.mongoConsult = function(action, query, callback) {
 		else {
 			var dbo = db.db("acms");
 
-			if(action == "insert-one") {
+			if(action == "insert") {
 				console.log("Connection Established. Action="+action);
-				dbo.collection("consult").insertOne(query, function(err, result) {
+				dbo.collection("consult").insert(query, function(err, result) {
 					if(callback)
 						return callback(result);
 			    	db.close();
@@ -280,15 +280,15 @@ exports.mongoConsult = function(action, query, callback) {
 			  	});
 			}
 
-			else if(action == "update-one") {
-				dbo.collection("consult").updateOne(query[0], query[1], function(err, result) {
+			else if(action == "update") {
+				dbo.collection("consult").update(query[0], query[1], function(err, result) {
 					if(callback)
 						return callback(result);
 					db.close();
 				});
 			}
 
-			else if(action == "delete-one") {
+			else if(action == "delete") {
 				dbo.collection("consult").deleteOne(query, function(err, result) {
 					if(callback)
 						return callback(result);
@@ -307,9 +307,9 @@ exports.mongoSupply = function(action, query, callback) {
 		else {
 			var dbo = db.db("acms");
 
-			if(action == "insert-one") {
+			if(action == "insert") {
 				console.log("Connection Established. Action="+action);
-				dbo.collection("supply").insertOne(query, function(err, result) {
+				dbo.collection("supply").insert(query, function(err, result) {
 					if(callback)
 						return callback(result);
 			    	db.close();
@@ -324,15 +324,15 @@ exports.mongoSupply = function(action, query, callback) {
 			  	});
 			}
 
-			else if(action == "update-one") {
-				dbo.collection("supply").updateOne(query[0], query[1], function(err, result) {
+			else if(action == "update") {
+				dbo.collection("supply").update(query[0], query[1], function(err, result) {
 					if(callback)
 						return callback(result);
 					db.close();
 				});
 			}
 
-			else if(action == "delete-one") {
+			else if(action == "delete") {
 				dbo.collection("supply").deleteOne(query, function(err, result) {
 					if(callback)
 						return callback(result);

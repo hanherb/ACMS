@@ -4,13 +4,14 @@ var {buildSchema} = require('graphql');
 
 exports.schema = buildSchema(`
 	type Query {
-		commerce(name: String!): Commerce,
+		commerce(_id: String!): Commerce,
 		commerces: [Commerce],
-		transaction(patient_name: String!): Transaction,
+		transaction(_id: String!): Transaction,
 		transactions: [Transaction]
 	},
 
 	type Commerce {
+		_id: String,
   		name: String,
   		price: Int,
   		qty: Int,
@@ -20,6 +21,7 @@ exports.schema = buildSchema(`
   	},
 
   	type Transaction {
+  		_id: String,
   		patient_name: String,
   		medicine: String,
   		transaction_date: String,
@@ -27,15 +29,16 @@ exports.schema = buildSchema(`
   	},
 
   	type Mutation {
-		updateCommerce(name: String!, input: CommerceInput): Commerce,
+		updateCommerce(_id: String!, input: CommerceInput): Commerce,
 		createCommerce(input: CommerceInput): Commerce,
-		deleteCommerce(name: String!): Commerce,
-		updateTransaction(patient_name: String!, input: TransactionInput): Transaction,
+		deleteCommerce(_id: String!): Commerce,
+		updateTransaction(_id: String!, input: TransactionInput): Transaction,
 		createTransaction(input: TransactionInput): Transaction,
-		deleteTransaction(patient_name: String!): Transaction
+		deleteTransaction(_id: String!): Transaction
 	},
 
 	input CommerceInput {
+		_id: String,
   		name: String,
   		price: Int,
   		qty: Int,
@@ -45,6 +48,7 @@ exports.schema = buildSchema(`
   	},
 
   	input TransactionInput {
+  		_id: String,
   		patient_name: String,
   		medicine: String,
   		transaction_date: String,
@@ -54,29 +58,33 @@ exports.schema = buildSchema(`
 
 var commerces = [];
 mongo.mongoCommerce("find", {}, function(response) {
-	for(var i = 0; i < response.length; i++)
+	for(var i = 0; i < response.length; i++) {
+		response[i]._id = response[i]._id.toString();
 		commerces.push(response[i]);
+	}
 });
 
 var transactions = [];
 mongo.mongoTransaction("find", {}, function(response) {
-	for(var i = 0; i < response.length; i++)
+	for(var i = 0; i < response.length; i++) {
+		response[i]._id = response[i]._id.toString();
 		transactions.push(response[i]);
+	}
 });
 
 var getCommerce = function(args) {
-	var itemName = args.name;
+	var itemId = args._id;
   	for(var i = 0; i < commerces.length; i++) {
-	  	if(itemName == commerces[i].name) {
+	  	if(itemId == commerces[i]._id) {
 	  		return commerces[i];
 	  	}
 	}
 }
 
 var getTransaction = function(args) {
-	var patientName = args.patient_name;
+	var transactionId = args._id;
   	for(var i = 0; i < transactions.length; i++) {
-	  	if(patientName == transactions[i].patient_name) {
+	  	if(transactionId == transactions[i]._id) {
 	  		return transactions[i];
 	  	}
 	}
@@ -90,10 +98,11 @@ var getTransactions = function() {
 	return transactions;
 }
 
-var updateCommerceFunction = function({name, input}) {
-	var itemName = name;
+var updateCommerceFunction = function({_id, input}) {
+	var itemId = _id;
   	for(var i = 0; i < commerces.length; i++) {
-	  	if(itemName == commerces[i].name) {
+	  	if(itemId == commerces[i]._id) {
+	  		let id = commerces[i]._id;
 	  		let name = commerces[i].name;
 	  		let price = commerces[i].price;
 	  		let qty = commerces[i].qty;
@@ -101,6 +110,8 @@ var updateCommerceFunction = function({name, input}) {
 	  		let user = commerces[i].user;
 	  		let image = commerces[i].image;
 	  		commerces[i] = input;
+	  		if(commerces[i]._id == undefined)
+	  			commerces[i]._id = id;
 	  		if(commerces[i].name == undefined)
 	  			commerces[i].name = name;
 	  		if(commerces[i].price == undefined)
@@ -118,10 +129,10 @@ var updateCommerceFunction = function({name, input}) {
 	}
 }
 
-var updateTransactionFunction = function({patient_name, input}) {
-	var patientName = patient_name;
+var updateTransactionFunction = function({_id, input}) {
+	var transactionId = _id;
   	for(var i = 0; i < transactions.length; i++) {
-	  	if(patientName == transactions[i].patient_name) {
+	  	if(transactionId == transactions[i]._id) {
 	  		transactions[i] = input;
 	  		return input;
 	  	}
@@ -138,22 +149,22 @@ var createTransactionFunction = function({input}) {
 	return input;
 }
 
-var deleteCommerceFunction = function({name}) {
-	var itemName = name;
+var deleteCommerceFunction = function({_id}) {
+	var itemId = _id;
   	for(var i = 0; i < commerces.length; i++) {
-	  	if(itemName == commerces[i].name) {
+	  	if(itemId == commerces[i]._id) {
 	  		commerces.splice(i, 1);
-	  		return commerces[i].name;
+	  		return commerces[i]._id;
 	  	}
 	}
 }
 
-var deleteTransactionFunction = function({patient_name}) {
-	var patient_name = patient_name;
+var deleteTransactionFunction = function({_id}) {
+	var transactionId = _id;
   	for(var i = 0; i < transactions.length; i++) {
-	  	if(patient_name == transactions[i].patient_name) {
+	  	if(transactionId == transactions[i]._id) {
 	  		transactions.splice(i, 1);
-	  		return transactions[i].patient_name;
+	  		return transactions[i]._id;
 	  	}
 	}
 }

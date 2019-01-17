@@ -1,2 +1,4 @@
 {"_id":{"$oid":"5c24d654e97ef31644af2cd4"},"supplier_name":"Supplier Super","medicine":"Selendang","qty":"3","supply_date":"27 December 2018 @ 20:40:35"}
 {"_id":{"$oid":"5c24d659e97ef31644af2cd5"},"supplier_name":"Supplier Super","medicine":"Jenggot","qty":"6","supply_date":"27 December 2018 @ 20:40:40"}
+{"_id":{"$oid":"5c2cafe2478ddd134cfbd5b3"},"supplier_name":"Supplier Super","medicine":"Chuba","qty":"3","supply_date":"2 January 2019 @ 19:34:41"}
+{"_id":{"$oid":"5c2cafe8478ddd134cfbd5b4"},"supplier_name":"Supplier Super","medicine":"Chuba","qty":"2","supply_date":"2 January 2019 @ 19:34:47"}

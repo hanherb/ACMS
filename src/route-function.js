@@ -25,7 +25,7 @@ exports.registerUser = function(req, res) {
 		role: req.body.role,
 		authority: req.body.authority
 	};
-	mongo.mongoUser("insert-one", obj, function(response) {
+	mongo.mongoUser("insert", obj, function(response) {
 		res.json(response.insertedCount);
 	});
 }
@@ -50,14 +50,14 @@ exports.loginUser = function(req, res) {
 
 exports.updateUser = function(req, res) {
 	let query = [{email: req.body.email}, {$set: {fullname: req.body.fullname, role: req.body.role, authority: req.body.authority}}];
-	mongo.mongoUser("update-one", query, function(response) {
+	mongo.mongoUser("update", query, function(response) {
 		res.json(response);
 	});
 }
 
 exports.deleteUser = function(req, res) {
 	let query = {email: req.body.email};
-	mongo.mongoUser("delete-one", query, function(response) {
+	mongo.mongoUser("delete", query, function(response) {
 		res.json(response);
 	});
 }
@@ -97,22 +97,20 @@ exports.listPlugin = function(req, res) {
 }
 
 exports.getPlugin = function(req, res) {
-	mongo.mongoPlugin("find", {}, function(response) {
-		res.json(response);
-	});
+	res.json(1);
 }
 
 exports.addPlugin = function(req, res) {
-	let plugin = req.query.plugin;
+	let plugin = req.body.plugin;
 	let newPlugin = '';
-	for(let i = 0; i <= plugin.name.length; i++) {
-		if(i < plugin.name.length) {
-			let query = [{name: plugin.name[i]}, {$set: {name: plugin.name[i], status: plugin.status[i]}}, {upsert: true}];
+	for(let i = 0; i <= plugin.length; i++) {
+		if(i < plugin.length) {
+			let query = [{name: plugin[i].name}, {$set: {name: plugin[i].name, status: plugin[i].status}}, {upsert: true}];
 			mongo.mongoPlugin("update", query, function(response) {
 				if(response.result.upserted) {
 					newPlugin = {
-						name: plugin.name[i],
-						status: plugin.status[i]
+						name: plugin[i].name,
+						status: plugin[i].status
 					};
 					console.log(newPlugin);
 				}
@@ -136,29 +134,30 @@ exports.getBlog = function(req, res) {
 
 exports.addPost = function(req, res) {
 	let obj = {
-		title: req.query.title,
-		content: req.query.content,
-		date: req.query.date,
-		month: req.query.month,
-		year: req.query.year,
-		author: req.query.author
+		title: req.body.title,
+		content: req.body.content,
+		date: req.body.date,
+		month: req.body.month,
+		year: req.body.year,
+		author: req.body.author
 	}
-	console.log(obj.author);
-	mongo.mongoBlog("insert-one", obj, function(response) {
+	mongo.mongoBlog("insert", obj, function(response) {
 		res.json(response);
 	});
 }
 
 exports.updatePost = function(req, res) {
-	let query = [{title: req.query.old}, {$set: {title: req.query.title, content: req.query.content, date: req.query.date, month: req.query.month, year: req.query.year}}];
-	mongo.mongoBlog("update-one", query, function(response) {
+	let o_id = new mongodb.ObjectID(req.body._id);
+	let query = [{_id: o_id}, {$set: {title: req.body.title, content: req.body.content, date: req.body.date, month: req.body.month, year: req.body.year}}];
+	mongo.mongoBlog("update", query, function(response) {
 		res.json(response);
 	});
 }
 
 exports.deletePost = function(req, res) {
-	let query = {title: req.query.title};
-	mongo.mongoBlog("delete-one", query, function(response) {
+	let o_id = new mongodb.ObjectID(req.body._id);
+	let query = {_id: o_id};
+	mongo.mongoBlog("delete", query, function(response) {
 		res.json(response);
 	});
 }
@@ -169,35 +168,38 @@ exports.getCommerce = function(req, res) {
 
 exports.addItem = function(req, res) {
 	let obj = {
-		name: req.query.name,
-		price: req.query.price,
-		qty: req.query.qty,
-		description: req.query.description,
-		user: req.query.user,
-		image: req.query.image
+		name: req.body.name,
+		price: req.body.price,
+		qty: req.body.qty,
+		description: req.body.description,
+		user: req.body.user,
+		image: req.body.image
 	}
-	mongo.mongoCommerce("insert-one", obj, function(response) {
+	mongo.mongoCommerce("insert", obj, function(response) {
 		res.json(response);
 	});
 }
 
 exports.updateItem = function(req, res) {
-	let query = [{name: req.query.old}, {$set: {name: req.query.name, price: req.query.price, qty: req.query.qty, description: req.query.description, image: req.query.image}}];
-	mongo.mongoCommerce("update-one", query, function(response) {
+	let o_id = new mongodb.ObjectID(req.body._id);
+	let query = [{_id: o_id}, {$set: {name: req.body.name, price: req.body.price, qty: req.body.qty, description: req.body.description, image: req.body.image}}];
+	mongo.mongoCommerce("update", query, function(response) {
+		console.log(response.result.nModified);
 		res.json(response);
 	});
 }
 
 exports.deleteItem = function(req, res) {
-	let query = {name: req.query.name};
-	mongo.mongoCommerce("delete-one", query, function(response) {
+	let o_id = new mongodb.ObjectID(req.body._id);
+	let query = {_id: o_id};
+	mongo.mongoCommerce("delete", query, function(response) {
 		res.json(response);
 	});
 }
 
 exports.buyItem = function(req, res) {
-	let query = [{name: req.query.name}, {$set: {qty: req.query.qty}}];
-	mongo.mongoCommerce("update-one", query, function(response) {
+	let query = [{name: req.body.name}, {$set: {qty: req.body.qty}}];
+	mongo.mongoCommerce("update", query, function(response) {
 		res.json(response);
 	});
 }
@@ -208,12 +210,12 @@ exports.getTransaction = function(req, res) {
 
 exports.addTransaction = function(req, res) {
 	let obj = {
-		patient_name: req.query.patient_name,
-		medicine: req.query.medicine,
-		transaction_date: req.query.transaction_date,
-		price: parseInt(req.query.price)
+		patient_name: req.body.patient_name,
+		medicine: req.body.medicine,
+		transaction_date: req.body.transaction_date,
+		price: parseInt(req.body.price)
 	}
-	mongo.mongoTransaction("insert-one", obj, function(response) {
+	mongo.mongoTransaction("insert", obj, function(response) {
 		res.json(response);
 	});
 }
@@ -230,35 +232,35 @@ exports.addConsult = function(req, res) {
 		medicine: req.query.medicine,
 		status: req.query.status
 	}
-	mongo.mongoConsult("insert-one", obj, function(response) {
+	mongo.mongoConsult("insert", obj, function(response) {
 		res.json(response);
 	});
 }
 
 exports.updateConsult = function(req, res) {
 	let query = [{patient_name: req.query.patient_name}, {$set: {patient_name: req.query.patient_name, doctor_name: req.query.doctor_name, checkin_date: req.query.checkin_date, medicine: req.query.medicine, status: req.query.status}}];
-	mongo.mongoConsult("update-one", query, function(response) {
+	mongo.mongoConsult("update", query, function(response) {
 		res.json(response);
 	});
 }
 
 exports.updateSpecificConsult = function(req, res) {
 	let query = [{patient_name: req.query.patient_name, status: req.query.status}, {$set: {patient_name: req.query.patient_name, doctor_name: req.query.doctor_name, checkin_date: req.query.checkin_date, medicine: req.query.medicine, status: req.query.status}}];
-	mongo.mongoConsult("update-one", query, function(response) {
+	mongo.mongoConsult("update", query, function(response) {
 		res.json(response);
 	});
 }
 
 exports.updateStatusConsult = function(req, res) {
 	let query = [{patient_name: req.query.patient_name, status: req.query.prevStatus}, {$set: {patient_name: req.query.patient_name, status: req.query.status}}];
-	mongo.mongoConsult("update-one", query, function(response) {
+	mongo.mongoConsult("update", query, function(response) {
 		res.json(response);
 	});
 }
 
 exports.addConsultDate = function(req, res) {
 	let query = [{patient_name: req.query.patient_name, status: req.query.status}, {$set: {patient_name: req.query.patient_name, consult_date: req.query.consult_date}}];
-	mongo.mongoConsult("update-one", query, function(response) {
+	mongo.mongoConsult("update", query, function(response) {
 		console.log(response);
 		res.json(response);
 	});
@@ -270,19 +272,20 @@ exports.getSupply = function(req, res) {
 
 exports.addSupply = function(req, res) {
 	let obj = {
-		supplier_name: req.query.supplier_name,
-		medicine: req.query.medicine,
-		qty: req.query.qty,
-		supply_date: req.query.supply_date
+		supplier_name: req.body.supplier_name,
+		medicine: req.body.medicine,
+		qty: req.body.qty,
+		supply_date: req.body.supply_date
 	}
-	mongo.mongoSupply("insert-one", obj, function(response) {
+	mongo.mongoSupply("insert", obj, function(response) {
 		res.json(response);
 	});
 }
 
 exports.itemSupplied = function(req, res) {
-	let query = [{name: req.query.medicine}, {$set: {qty: req.query.qty}}];
-	mongo.mongoCommerce("update-one", query, function(response) {
+	let o_id = new mongodb.ObjectID(req.body._id);
+	let query = [{_id: o_id}, {$set: {qty: req.body.qty}}];
+	mongo.mongoCommerce("update", query, function(response) {
 		res.json(response);
 	});
 }

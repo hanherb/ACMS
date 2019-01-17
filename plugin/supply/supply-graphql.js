@@ -9,6 +9,7 @@ exports.schema = buildSchema(`
 	},
 
 	type Supply {
+		_id: String,
   		supplier_name: String,
   		medicine: String,
   		qty: Int,
@@ -16,12 +17,13 @@ exports.schema = buildSchema(`
   	},
 
   	type Mutation {
-		updateSupply(name: String!, input: SupplyInput): Supply,
+		updateSupply(_id: String!, input: SupplyInput): Supply,
 		createSupply(input: SupplyInput): Supply,
-		deleteSupply(name: String!): Supply
+		deleteSupply(_id: String!): Supply
 	},
 
 	input SupplyInput {
+		_id: String,
   		supplier_name: String,
   		medicine: String,
   		qty: Int,
@@ -31,14 +33,16 @@ exports.schema = buildSchema(`
 
 var supplies = [];
 mongo.mongoSupply("find", {}, function(response) {
-	for(var i = 0; i < response.length; i++)
+	for(var i = 0; i < response.length; i++) {
+		response[i]._id = response[i]._id.toString();
 		supplies.push(response[i]);
+	}
 });
 
 var getSupply = function(args) {
-	var supplierName = args.supplier_name;
+	var supplyId = args._id;
   	for(var i = 0; i < supplies.length; i++) {
-	  	if(supplierName == supplies[i].supplier_name) {
+	  	if(supplyId == supplies[i]._id) {
 	  		return supplies[i];
 	  	}
 	}
@@ -48,10 +52,10 @@ var getSupplies = function() {
 	return supplies;
 }
 
-var updateSupplyFunction = function({supplier_name, input}) {
-	var supplierName = supplier_name;
+var updateSupplyFunction = function({_id, input}) {
+	var supplyId = _id;
   	for(var i = 0; i < supplies.length; i++) {
-	  	if(supplierName == supplies[i].supplier_name) {
+	  	if(supplyId == supplies[i]._id) {
 	  		supplies[i] = input;
 	  		return input;
 	  	}
@@ -63,12 +67,12 @@ var createSupplyFunction = function({input}) {
 	return input;
 }
 
-var deleteSupplyFunction = function({supplier_name}) {
-	var supplierName = supplier_name;
+var deleteSupplyFunction = function({_id}) {
+	var supplyId = _id;
   	for(var i = 0; i < supplies.length; i++) {
-	  	if(supplierName == supplies[i].supplier_name) {
+	  	if(supplyId == supplies[i]._id) {
 	  		supplies.splice(i, 1);
-	  		return supplies[i].supplier_name;
+	  		return supplies[i]._id;
 	  	}
 	}
 }

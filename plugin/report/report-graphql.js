@@ -35,8 +35,9 @@ exports.schema = buildSchema(`
 
 var commerces = [];
 mongo.mongoCommerce("find", {}, function(response) {
-	for(var i = 0; i < response.length; i++)
+	for(var i = 0; i < response.length; i++) {
 		commerces.push(response[i]);
+	}
 });
 
 var getCommerce = function(args) {

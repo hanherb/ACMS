@@ -4,11 +4,12 @@ var {buildSchema} = require('graphql');
 
 exports.schema = buildSchema(`
 	type Query {
-		blog(title: String!): Blog,
+		blog(_id: String!): Blog,
 		blogs: [Blog]
 	},
 
 	type Blog {
+		_id: String,
   		title: String,
   		content: String,
   		date: Int,
@@ -18,12 +19,13 @@ exports.schema = buildSchema(`
   	},
 
   	type Mutation {
-		updateBlog(title: String!, input: BlogInput): Blog,
+		updateBlog(_id: String!, input: BlogInput): Blog,
 		createBlog(input: BlogInput): Blog,
-		deleteBlog(title: String!): Blog
+		deleteBlog(_id: String!): Blog
 	},
 
 	input BlogInput {
+		_id: String,
   		title: String,
   		content: String,
   		date: Int,
@@ -35,14 +37,16 @@ exports.schema = buildSchema(`
 
 var blogs = [];
 mongo.mongoBlog("find", {}, function(response) {
-	for(var i = 0; i < response.length; i++)
+	for(var i = 0; i < response.length; i++) {
+		response[i]._id = response[i]._id.toString();
 		blogs.push(response[i]);
+	}
 });
 
 var getBlog = function(args) {
-	var blogTitle = args.title;
+	var blogId = args._id;
   	for(var i = 0; i < blogs.length; i++) {
-	  	if(blogTitle == blogs[i].title) {
+	  	if(blogId == blogs[i]._id) {
 	  		return blogs[i];
 	  	}
 	}
@@ -52,10 +56,10 @@ var getBlogs = function() {
 	return blogs;
 }
 
-var updateBlogFunction = function({title, input}) {
-	var blogTitle = title;
+var updateBlogFunction = function({_id, input}) {
+	var blogId = _id;
   	for(var i = 0; i < blogs.length; i++) {
-	  	if(blogTitle == blogs[i].title) {
+	  	if(blogId == blogs[i]._id) {
 	  		var oldAuthor = blogs[i].author;
 	  		blogs[i] = input;
 	  		blogs[i].author = oldAuthor;
@@ -66,15 +70,22 @@ var updateBlogFunction = function({title, input}) {
 
 var createBlogFunction = function({input}) {
 	blogs.push(input);
+	// blogs = [];
+	// mongo.mongoBlog("find", {}, function(response) {
+	// 	for(var i = 0; i < response.length; i++) {
+	// 		response[i]._id = response[i]._id.toString();
+	// 		blogs.push(response[i]);
+	// 	}
+	// });
 	return input;
 }
 
-var deleteBlogFunction = function({title}) {
-	var blogTitle = title;
+var deleteBlogFunction = function({_id}) {
+	var blogId = _id;
   	for(var i = 0; i < blogs.length; i++) {
-	  	if(blogTitle == blogs[i].title) {
+	  	if(blogId == blogs[i]._id) {
 	  		blogs.splice(i, 1);
-	  		return blogs[i].title;
+	  		return blogs[i]._id;
 	  	}
 	}
 }

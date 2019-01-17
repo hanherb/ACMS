@@ -1,5 +1,5 @@
-{"_id":{"$oid":"5be19137fc8d403b9b92b812"},"name":"blog","status":"1"}
-{"_id":{"$oid":"5bfef0bed016973194c9c7a1"},"name":"commerce","status":"1"}
-{"_id":{"$oid":"5c0a57f22c10b29838cb452c"},"name":"consult","status":"1"}
-{"_id":{"$oid":"5c236081e83b6cb71b380326"},"name":"report","status":"1"}
-{"_id":{"$oid":"5c24c3b6fe71df2608b75a73"},"name":"supply","status":"1"}
+{"_id":{"$oid":"5be19137fc8d403b9b92b812"},"name":"blog","status":1}
+{"_id":{"$oid":"5bfef0bed016973194c9c7a1"},"name":"commerce","status":1}
+{"_id":{"$oid":"5c0a57f22c10b29838cb452c"},"name":"consult","status":1}
+{"_id":{"$oid":"5c236081e83b6cb71b380326"},"name":"report","status":1}
+{"_id":{"$oid":"5c24c3b6fe71df2608b75a73"},"name":"supply","status":1}
