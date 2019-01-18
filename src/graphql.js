@@ -69,20 +69,24 @@ exports.schema = mergeSchema.mergeSchemas({
 
 var users = [];
 mongo.mongoUser("find", {}, function(response) {
-	for(var i = 0; i < response.length; i++)
+	for(var i = 0; i < response.length; i++) {
+		response[i]._id = response[i]._id.toString();
 		users.push(response[i]);
+	}
 });
 
 var roles = [];
-mongo.mongoRole("find", {}, function(response) {
-	for(var i = 0; i < response.length; i++)
+mongo.mongoRole("find", {}, function(response) { 
+	for(var i = 0; i < response.length; i++) {
 		roles.push(response[i]);
+	}
 });
 
 var plugins = [];
 mongo.mongoPlugin("find", {}, function(response) {
-	for(var i = 0; i < response.length; i++)
+	for(var i = 0; i < response.length; i++) {
 		plugins.push(response[i]);
+	}
 });
 
 var getUser = function(args) {
@@ -177,35 +181,42 @@ exports.root = {
 	roles: getRoles,
 	plugin: getPlugin,
 	plugins: getPlugins,
+
 	blog: blogGraphql.root.blog,
 	blogs: blogGraphql.root.blogs,
+
 	commerce: commerceGraphql.root.commerce,
 	commerces: commerceGraphql.root.commerces,
 	transaction: commerceGraphql.root.transaction,
 	transactions: commerceGraphql.root.transactions,
+
 	consult: consultGraphql.root.consult,
-	consultPending: consultGraphql.root.consultPending,
-	consultMed: consultGraphql.root.consultMed,
 	consults: consultGraphql.root.consults,
+
 	supply: supplyGraphql.root.supply,
 	supplies: supplyGraphql.root.supplies,
+
 	updateUser: updateUserFunction,
 	createUser: createUserFunction,
 	deleteUser: deleteUserFunction,
 	createPlugin: createPluginFunction,
 	updatePlugin: updatePluginFunction,
+
 	updateBlog: blogGraphql.root.updateBlog,
 	createBlog: blogGraphql.root.createBlog,
 	deleteBlog: blogGraphql.root.deleteBlog,
+
 	updateCommerce: commerceGraphql.root.updateCommerce,
 	createCommerce: commerceGraphql.root.createCommerce,
 	deleteCommerce: commerceGraphql.root.deleteCommerce,
 	updateTransaction: commerceGraphql.root.updateTransaction,
 	createTransaction: commerceGraphql.root.createTransaction,
 	deleteTransaction: commerceGraphql.root.deleteTransaction,
+
 	updateConsult: consultGraphql.root.updateConsult,
 	createConsult: consultGraphql.root.createConsult,
 	deleteConsult: consultGraphql.root.deleteConsult,
+	
 	updateSupply: supplyGraphql.root.updateSupply,
 	createSupply: supplyGraphql.root.createSupply,
 	deleteSupply: supplyGraphql.root.deleteSupply

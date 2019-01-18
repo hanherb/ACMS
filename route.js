@@ -55,15 +55,9 @@ router.route('/add-transaction').get(function(req, res) {rf.addTransaction(req, 
 
 router.route('/get-consult').get(function(req, res) {rf.getConsult(req, res)});
 
-router.route('/add-consult').get(function(req, res) {rf.addConsult(req, res)});
+router.route('/add-consult').post(function(req, res) {rf.addConsult(req, res)});
 
-router.route('/update-consult').get(function(req, res) {rf.updateConsult(req, res)});
-
-router.route('/update-specific-consult').get(function(req, res) {rf.updateSpecificConsult(req, res)});
-
-router.route('/update-status-consult').get(function(req, res) {rf.updateStatusConsult(req, res)});
-
-router.route('/add-consult-date').get(function(req, res) {rf.addConsultDate(req, res)});
+router.route('/update-consult').post(function(req, res) {rf.updateConsult(req, res)});
 
 router.route('/get-supply').get(function(req, res) {rf.getSupply(req, res)});
 

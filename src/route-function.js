@@ -226,11 +226,10 @@ exports.getConsult = function(req, res) {
 
 exports.addConsult = function(req, res) {
 	let obj = {
-		doctor_name: req.query.doctor_name,
-		patient_name: req.query.patient_name,
-		checkin_date: req.query.checkin_date,
-		medicine: req.query.medicine,
-		status: req.query.status
+		doctor_name: req.body.doctor_name,
+		patient_name: req.body.patient_name,
+		checkin_date: req.body.checkin_date,
+		status: req.body.status
 	}
 	mongo.mongoConsult("insert", obj, function(response) {
 		res.json(response);
@@ -238,30 +237,9 @@ exports.addConsult = function(req, res) {
 }
 
 exports.updateConsult = function(req, res) {
-	let query = [{patient_name: req.query.patient_name}, {$set: {patient_name: req.query.patient_name, doctor_name: req.query.doctor_name, checkin_date: req.query.checkin_date, medicine: req.query.medicine, status: req.query.status}}];
+	let o_id = new mongodb.ObjectID(req.body._id);
+	let query = [{_id: o_id}, {$set: {patient_name: req.body.patient_name, doctor_name: req.body.doctor_name, checkin_date: req.body.checkin_date, consult_date: req.body.consult_date, medicine: req.body.medicine, status: req.body.status}}];
 	mongo.mongoConsult("update", query, function(response) {
-		res.json(response);
-	});
-}
-
-exports.updateSpecificConsult = function(req, res) {
-	let query = [{patient_name: req.query.patient_name, status: req.query.status}, {$set: {patient_name: req.query.patient_name, doctor_name: req.query.doctor_name, checkin_date: req.query.checkin_date, medicine: req.query.medicine, status: req.query.status}}];
-	mongo.mongoConsult("update", query, function(response) {
-		res.json(response);
-	});
-}
-
-exports.updateStatusConsult = function(req, res) {
-	let query = [{patient_name: req.query.patient_name, status: req.query.prevStatus}, {$set: {patient_name: req.query.patient_name, status: req.query.status}}];
-	mongo.mongoConsult("update", query, function(response) {
-		res.json(response);
-	});
-}
-
-exports.addConsultDate = function(req, res) {
-	let query = [{patient_name: req.query.patient_name, status: req.query.status}, {$set: {patient_name: req.query.patient_name, consult_date: req.query.consult_date}}];
-	mongo.mongoConsult("update", query, function(response) {
-		console.log(response);
 		res.json(response);
 	});
 }
