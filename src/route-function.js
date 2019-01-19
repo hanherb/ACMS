@@ -197,8 +197,9 @@ exports.deleteItem = function(req, res) {
 	});
 }
 
-exports.buyItem = function(req, res) {
-	let query = [{name: req.body.name}, {$set: {qty: req.body.qty}}];
+exports.substractQty = function(req, res) {
+	let o_id = new mongodb.ObjectID(req.body._id);
+	let query = [{_id: o_id}, {$set: {qty: req.body.qty}}];
 	mongo.mongoCommerce("update", query, function(response) {
 		res.json(response);
 	});
@@ -210,7 +211,7 @@ exports.getTransaction = function(req, res) {
 
 exports.addTransaction = function(req, res) {
 	let obj = {
-		patient_name: req.body.patient_name,
+		buyer_name: req.body.buyer_name,
 		medicine: req.body.medicine,
 		transaction_date: req.body.transaction_date,
 		price: parseInt(req.body.price)
@@ -238,7 +239,7 @@ exports.addConsult = function(req, res) {
 
 exports.updateConsult = function(req, res) {
 	let o_id = new mongodb.ObjectID(req.body._id);
-	let query = [{_id: o_id}, {$set: {patient_name: req.body.patient_name, doctor_name: req.body.doctor_name, checkin_date: req.body.checkin_date, consult_date: req.body.consult_date, medicine: req.body.medicine, status: req.body.status}}];
+	let query = [{_id: o_id}, {$set: {patient_name: req.body.patient_name, doctor_name: req.body.doctor_name, checkin_date: req.body.checkin_date, consult_date: req.body.consult_date, diagnosis: req.body.diagnosis, medicine: req.body.medicine, status: req.body.status}}];
 	mongo.mongoConsult("update", query, function(response) {
 		res.json(response);
 	});

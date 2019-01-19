@@ -17,7 +17,7 @@ exports.schema = buildSchema(`
   		checkin_date: String,
   		consult_date: String,
   		diagnosis: String,
-  		medicine: [String],
+  		medicine: String,
   		status : String
   	},
 
@@ -63,8 +63,7 @@ var getConsults = function() {
 var updateConsultFunction = function({_id, input}) {
 	var consultId = _id;
   	for(var i = 0; i < consults.length; i++) {
-	  	if(consultId == consults[i]._id && (consults[i].status == "pending" || consults[i].status == "ongoing"
-	  		|| consults[i].status == "waitmed")) {
+	  	if(consultId == consults[i]._id && (consults[i].status == "pending" || consults[i].status == "ongoing")) {
 	  		let _id = consults[i]._id;
 	  		let patient_name = consults[i].patient_name;
 	  		let doctor_name = consults[i].doctor_name;

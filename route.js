@@ -47,11 +47,11 @@ router.route('/update-item').post(function(req, res) {rf.updateItem(req, res)});
 
 router.route('/delete-item').post(function(req, res) {rf.deleteItem(req, res)});
 
-router.route('/buy-item').post(function(req, res) {rf.buyItem(req, res)});
+router.route('/substract-qty').post(function(req, res) {rf.substractQty(req, res)});
 
 router.route('/get-transaction').get(function(req, res) {rf.getTransaction(req, res)});
 
-router.route('/add-transaction').get(function(req, res) {rf.addTransaction(req, res)});
+router.route('/add-transaction').post(function(req, res) {rf.addTransaction(req, res)});
 
 router.route('/get-consult').get(function(req, res) {rf.getConsult(req, res)});
 

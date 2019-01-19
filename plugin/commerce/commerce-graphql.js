@@ -22,7 +22,7 @@ exports.schema = buildSchema(`
 
   	type Transaction {
   		_id: String,
-  		patient_name: String,
+  		buyer_name: String,
   		medicine: String,
   		transaction_date: String,
   		price: Int
@@ -49,7 +49,7 @@ exports.schema = buildSchema(`
 
   	input TransactionInput {
   		_id: String,
-  		patient_name: String,
+  		buyer_name: String,
   		medicine: String,
   		transaction_date: String,
   		price: Int
