@@ -342,3 +342,47 @@ exports.mongoSupply = function(action, query, callback) {
 		}
 	});
 }
+
+exports.mongoLogger = function(action, query, callback) {
+	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+		if(err) {
+			console.log("Error: ", err);
+		}
+		else {
+			var dbo = db.db("acms");
+
+			if(action == "insert") {
+				console.log("Connection Established. Action="+action);
+				dbo.collection("logger").insertOne(query, function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "find") {
+				dbo.collection("logger").find({}).toArray(function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "update") {
+				dbo.collection("logger").update(query[0], query[1], function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+
+			else if(action == "delete") {
+				dbo.collection("logger").deleteOne(query, function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+		}
+	});
+}

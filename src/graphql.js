@@ -9,8 +9,9 @@ var supplyGraphql = require('../plugin/supply/supply-graphql');
 
 var defaultSchema = buildSchema(`
 	type Query {
-		user(email: String!): Person,
+		user(_id: String!): Person,
 		users: [Person],
+		logs: [Log],
 		roles: [Role],
 		plugin(name: String!): Plugin,
 		plugins: [Plugin],
@@ -22,6 +23,13 @@ var defaultSchema = buildSchema(`
 	    email: String,
 	    role: String,
 	    authority: [String]
+  	},
+
+  	type Log {
+  		_id: String,
+  		path: String,
+  		userId: String,
+  		date: String
   	},
 
   	type Plugin {
@@ -37,6 +45,7 @@ var defaultSchema = buildSchema(`
 		updateUser(email: String!, input: PersonInput): Person,
 		createUser(input: PersonInput): Person,
 		deleteUser(email: String!): Person,
+		createLog(input: LogInput): Log,
 		updatePlugin(name: String!, input: PluginInput): Plugin
 		createPlugin(input: PluginInput): Plugin
 	},
@@ -49,6 +58,13 @@ var defaultSchema = buildSchema(`
 	    authority: [String],
 	    password: String
   	},
+
+  	input LogInput {
+  		_id: String,
+  		path: String,
+  		userId: String,
+  		date: String
+  	}
 
   	input PluginInput {
   		name: String,
@@ -75,6 +91,14 @@ mongo.mongoUser("find", {}, function(response) {
 	}
 });
 
+var logs = [];
+mongo.mongoLogger("find", {}, function(response) {
+	for(var i = 0; i < response.length; i++) {
+		response[i]._id = response[i]._id.toString();
+		logs.push(response[i]);
+	}
+});
+
 var roles = [];
 mongo.mongoRole("find", {}, function(response) { 
 	for(var i = 0; i < response.length; i++) {
@@ -90,9 +114,9 @@ mongo.mongoPlugin("find", {}, function(response) {
 });
 
 var getUser = function(args) {
-	var userEmail = args.email;
+	var userId = args._id;
   	for(var i = 0; i < users.length; i++) {
-	  	if(userEmail == users[i].email) {
+	  	if(userId == users[i]._id) {
 	  		return users[i];
 	  	}
 	}
@@ -100,6 +124,10 @@ var getUser = function(args) {
 
 var getUsers = function() {
 	return users;
+}
+
+var getLogs = function() {
+	return logs;
 }
 
 var getRoles = function() {
@@ -159,6 +187,11 @@ var deleteUserFunction = function({email}) {
 	}
 }
 
+var createLogFunction = function({input}) {
+	logs.push(input);
+	return input;
+}
+
 var createPluginFunction = function({input}) {
 	plugins.push(input);
 	return input;
@@ -178,6 +211,7 @@ var updatePluginFunction = function({name, input}) {
 exports.root = {
 	user: getUser,
 	users: getUsers,
+	logs: getLogs,
 	roles: getRoles,
 	plugin: getPlugin,
 	plugins: getPlugins,
@@ -199,6 +233,7 @@ exports.root = {
 	updateUser: updateUserFunction,
 	createUser: createUserFunction,
 	deleteUser: deleteUserFunction,
+	createLog: createLogFunction,
 	createPlugin: createPluginFunction,
 	updatePlugin: updatePluginFunction,
 

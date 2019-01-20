@@ -17,6 +17,13 @@ exports.getUser = function(req, res) {
 	res.json(1);
 }
 
+exports.getLog = function(req, res) {
+	console.log("kuda");
+	mongo.mongoLogger("find", {}, function(response) {
+		res.json(response);
+	});
+}
+
 exports.registerUser = function(req, res) {
 	let obj = {
 		email: req.body.email,

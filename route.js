@@ -11,6 +11,8 @@ router.route('/').get(function(req, res) {rf.redirectIndex(req, res)});
 
 router.route('/get-user').get(function(req, res) {rf.getUser(req, res)});
 
+router.route('/get-log').get(function(req, res) {rf.getLog(req, res)});
+
 router.route('/register-user').post(function(req, res) {rf.registerUser(req, res)});
 
 router.route('/login-user').post(function(req, res) {rf.loginUser(req, res)});
