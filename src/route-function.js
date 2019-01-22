@@ -217,13 +217,10 @@ exports.getTransaction = function(req, res) {
 }
 
 exports.addTransaction = function(req, res) {
-	let obj = {
-		buyer_name: req.body.buyer_name,
-		medicine: req.body.medicine,
-		transaction_date: req.body.transaction_date,
-		price: parseInt(req.body.price)
+	for(let i = 0; i < req.body.length; i++) {
+		delete req.body[i].prevQty;
 	}
-	mongo.mongoTransaction("insert", obj, function(response) {
+	mongo.mongoTransaction("insert", req.body, function(response) {
 		res.json(response);
 	});
 }

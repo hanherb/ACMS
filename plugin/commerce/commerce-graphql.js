@@ -23,9 +23,11 @@ exports.schema = buildSchema(`
   	type Transaction {
   		_id: String,
   		buyer_name: String,
-  		medicine: String,
+  		itemId: String,
+  		itemName: String,
+  		itemQty: Int,
   		transaction_date: String,
-  		price: Int
+  		totalPrice: Int
   	},
 
   	type Mutation {
@@ -50,9 +52,11 @@ exports.schema = buildSchema(`
   	input TransactionInput {
   		_id: String,
   		buyer_name: String,
-  		medicine: String,
+  		itemId: String,
+  		itemName: String,
+  		itemQty: Int,
   		transaction_date: String,
-  		price: Int
+  		totalPrice: Int
   	},
 `);
 
