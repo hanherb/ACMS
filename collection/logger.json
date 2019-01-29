@@ -1,25 +1,13 @@
-{"_id":{"$oid":"5c44bdca1ea9f3289cfe7f06"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:28:25"}
-{"_id":{"$oid":"5c44bdcb1ea9f3289cfe7f07"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:28:26"}
-{"_id":{"$oid":"5c44bdd91ea9f3289cfe7f08"},"path":"/get-commerce","userId":"5c3cda96ec75790d0c2d6cda","date":"21 January 2019 @ 1:28:40"}
-{"_id":{"$oid":"5c44bddd1ea9f3289cfe7f09"},"path":"/get-commerce","userId":"5c3cda96ec75790d0c2d6cda","date":"21 January 2019 @ 1:28:44"}
-{"_id":{"$oid":"5c44bde11ea9f3289cfe7f0a"},"path":"/update-item","userId":"5c3cda96ec75790d0c2d6cda","date":"21 January 2019 @ 1:28:48"}
-{"_id":{"$oid":"5c44bde31ea9f3289cfe7f0b"},"path":"/get-commerce","userId":"5c3cda96ec75790d0c2d6cda","date":"21 January 2019 @ 1:28:50"}
-{"_id":{"$oid":"5c44bdff1ea9f3289cfe7f0c"},"path":"/get-consult","userId":"5c3cdb91ec75790d0c2d6cdd","date":"21 January 2019 @ 1:29:18"}
-{"_id":{"$oid":"5c44be131ea9f3289cfe7f0d"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:29:38"}
-{"_id":{"$oid":"5c44be141ea9f3289cfe7f0e"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:29:39"}
-{"_id":{"$oid":"5c44be2d4bd8fb14fc4693c1"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:30:4"}
-{"_id":{"$oid":"5c44be2e4bd8fb14fc4693c2"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:30:5"}
-{"_id":{"$oid":"5c44be3d4bd8fb14fc4693c3"},"path":"/get-consult","userId":"5c3cdb91ec75790d0c2d6cdd","date":"21 January 2019 @ 1:30:20"}
-{"_id":{"$oid":"5c44be424bd8fb14fc4693c4"},"path":"/add-consult","userId":"5c3cdb91ec75790d0c2d6cdd","date":"21 January 2019 @ 1:30:25"}
-{"_id":{"$oid":"5c44be464bd8fb14fc4693c6"},"path":"/get-consult","userId":"5c3cdb91ec75790d0c2d6cdd","date":"21 January 2019 @ 1:30:29"}
-{"_id":{"$oid":"5c44be594bd8fb14fc4693c7"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:30:48"}
-{"_id":{"$oid":"5c44be5a4bd8fb14fc4693c8"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:30:49"}
-{"_id":{"$oid":"5c44be5c4bd8fb14fc4693c9"},"path":"/update-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:30:51"}
-{"_id":{"$oid":"5c44be604bd8fb14fc4693ca"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:30:55"}
-{"_id":{"$oid":"5c44be614bd8fb14fc4693cb"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:30:56"}
-{"_id":{"$oid":"5c44be714bd8fb14fc4693cc"},"path":"/update-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:31:12"}
-{"_id":{"$oid":"5c44be764bd8fb14fc4693cd"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:31:17"}
-{"_id":{"$oid":"5c44be774bd8fb14fc4693ce"},"path":"/get-consult","userId":"5c3cdb65ec75790d0c2d6cdb","date":"21 January 2019 @ 1:31:18"}
-{"_id":{"$oid":"5c44beb34bd8fb14fc4693cf"},"path":"/get-commerce","userId":"5c3cdb91ec75790d0c2d6cdd","date":"21 January 2019 @ 1:32:18"}
-{"_id":{"$oid":"5c44beb64bd8fb14fc4693d0"},"path":"/add-transaction","userId":"5c3cdb91ec75790d0c2d6cdd","date":"21 January 2019 @ 1:32:21"}
-{"_id":{"$oid":"5c44beb94bd8fb14fc4693d2"},"path":"/substract-qty","userId":"5c3cdb91ec75790d0c2d6cdd","date":"21 January 2019 @ 1:32:24"}
+{"_id":{"$oid":"5c4efb70fc0abb0e8010cf41"},"path":"/add-transaction","detail":"Bought 1 Chuba, 2 Jenggot","userId":"5c3cdb91ec75790d0c2d6cdd","date":"28 January 2019 @ 19:54:7"}
+{"_id":{"$oid":"5c4efb90fc0abb0e8010cf44"},"path":"/update-post","detail":"update post","userId":"5c3cdb91ec75790d0c2d6cdd","date":"28 January 2019 @ 19:54:39"}
+{"_id":{"$oid":"5c4efd685db7d92748e27d49"},"path":"/add-consult","detail":"Kambing Gunung applied consult with Beruang Madu","userId":"5c3cdb91ec75790d0c2d6cdd","date":"28 January 2019 @ 20:2:31"}
+{"_id":{"$oid":"5c4efe2c15e45723dce692fe"},"path":"/update-consult","detail":"Kambing Gunung started consult with Beruang Madu","userId":"5c3cdb7aec75790d0c2d6cdc","date":"28 January 2019 @ 20:5:46"}
+{"_id":{"$oid":"5c4efe5315e45723dce692ff"},"path":"/update-consult","detail":"Kambing Gunung finished consult with Beruang Madu","userId":"5c3cdb7aec75790d0c2d6cdc","date":"28 January 2019 @ 20:6:26"}
+{"_id":{"$oid":"5c4efe6d15e45723dce69300"},"path":"/add-transaction","detail":"Bought 2 Selendang","userId":"5c3cdb7aec75790d0c2d6cdc","date":"28 January 2019 @ 20:6:52"}
+{"_id":{"$oid":"5c4effce15e45723dce69302"},"path":"/create-user","detail":"create user","userId":"5c3cdb7aec75790d0c2d6cdc","date":"28 January 2019 @ 20:12:45"}
+{"_id":{"$oid":"5c4f0249de9dbd2578f7734f"},"path":"/list-plugin","detail":"list plugin","userId":"5c3cda96ec75790d0c2d6cda","date":"28 January 2019 @ 20:23:20"}
+{"_id":{"$oid":"5c4f025bde9dbd2578f77350"},"path":"/add-post","detail":"add post","userId":"5c3cda96ec75790d0c2d6cda","date":"28 January 2019 @ 20:23:38"}
+{"_id":{"$oid":"5c4f0270de9dbd2578f77352"},"path":"/delete-post","detail":"delete post","userId":"5c3cda96ec75790d0c2d6cda","date":"28 January 2019 @ 20:23:59"}
+{"_id":{"$oid":"5c4f027cde9dbd2578f77353"},"path":"/add-post","detail":"add post","userId":"5c3cda96ec75790d0c2d6cda","date":"28 January 2019 @ 20:24:11"}
+{"_id":{"$oid":"5c4f02ed8f625e0ff83a7f73"},"path":"/delete-post","detail":"delete post","userId":"5c3cda96ec75790d0c2d6cda","date":"28 January 2019 @ 20:26:4"}
+{"_id":{"$oid":"5c4f04fb68d4ee1f74bd78bc"},"path":"/add-supply","detail":"Supplied 5 Chuba","userId":"5c4f03058f625e0ff83a7f74","date":"28 January 2019 @ 20:34:50"}

@@ -34,7 +34,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.all('*', middle.verifyToken);
+app.all('*', middle.beforeEndPoint);
 
 app.use('/', route);
 

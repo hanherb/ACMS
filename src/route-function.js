@@ -33,7 +33,7 @@ exports.registerUser = function(req, res) {
 		authority: req.body.authority
 	};
 	mongo.mongoUser("insert", obj, function(response) {
-		res.json(response.insertedCount);
+		res.json(response);
 	});
 }
 
