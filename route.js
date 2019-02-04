@@ -25,8 +25,6 @@ router.route('/delete-user').post(function(req, res) {rf.deleteUser(req, res)});
 
 router.route('/get-role').get(function(req, res) {rf.getRole(req, res)});
 
-router.route('/check-session').get(function(req, res) {rf.checkSession(req, res)});
-
 router.route('/list-plugin').get(function(req, res) {rf.listPlugin(req, res)});
 
 router.route('/get-plugin').get(function(req, res) {rf.getPlugin(req, res)});
