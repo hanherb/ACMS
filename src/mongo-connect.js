@@ -386,3 +386,91 @@ exports.mongoLogger = function(action, query, callback) {
 		}
 	});
 }
+
+exports.mongoAccount = function(action, query, callback) {
+	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+		if(err) {
+			console.log("Error: ", err);
+		}
+		else {
+			var dbo = db.db("acms");
+
+			if(action == "insert") {
+				console.log("Connection Established. Action="+action);
+				dbo.collection("account").insert(query, function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "find") {
+				dbo.collection("account").find({}).toArray(function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "update") {
+				dbo.collection("account").update(query[0], query[1], function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+
+			else if(action == "delete") {
+				dbo.collection("account").deleteOne(query, function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+		}
+	});
+}
+
+exports.mongoLedger = function(action, query, callback) {
+	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+		if(err) {
+			console.log("Error: ", err);
+		}
+		else {
+			var dbo = db.db("acms");
+
+			if(action == "insert") {
+				console.log("Connection Established. Action="+action);
+				dbo.collection("ledger").insert(query, function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "find") {
+				dbo.collection("ledger").find({}).toArray(function(err, result) {
+					if(callback)
+						return callback(result);
+			    	db.close();
+			  	});
+			}
+
+			else if(action == "update") {
+				dbo.collection("ledger").update(query[0], query[1], function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+
+			else if(action == "delete") {
+				dbo.collection("ledger").deleteOne(query, function(err, result) {
+					if(callback)
+						return callback(result);
+					db.close();
+				});
+			}
+		}
+	});
+}

@@ -12,6 +12,7 @@ const blogPlugin = require('../plugin/blog/blog');
 const commercePlugin = require('../plugin/commerce/commerce');
 const consultPlugin = require('../plugin/consult/consult');
 const supplyPlugin = require('../plugin/supply/supply');
+const accountPlugin = require('../plugin/account/account');
 
 app.use(cookieParser());
 
@@ -173,6 +174,30 @@ exports.addSupply = function(req, res) {
 
 exports.itemSupplied = function(req, res) {
 	supplyPlugin.itemSupplied(req, res);
+}
+
+exports.getAccount = function(req, res) {
+	res.json(1);
+}
+
+exports.addAccount = function(req, res) {
+	accountPlugin.add(req, res);
+}
+
+exports.updateAccount = function(req, res) {
+	accountPlugin.update(req, res);
+}
+
+exports.deleteAccount= function(req, res) {
+	accountPlugin.delete(req, res);
+}
+
+exports.getLedger = function(req, res) {
+	res.json(1);
+}
+
+exports.addLedger = function(req, res) {
+	accountPlugin.addLedger(req, res);
 }
 
 exports.logout = function(req, res) {

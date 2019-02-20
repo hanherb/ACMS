@@ -65,6 +65,18 @@ router.route('/add-supply').post(function(req, res) {rf.addSupply(req, res)});
 
 router.route('/item-supplied').post(function(req, res) {rf.itemSupplied(req, res)});
 
+router.route('/get-account').get(function(req, res) {rf.getAccount(req, res)});
+
+router.route('/add-account').post(function(req, res) {rf.addAccount(req, res)});
+
+router.route('/update-account').post(function(req, res) {rf.updateAccount(req, res)});
+
+router.route('/delete-account').post(function(req, res) {rf.deleteAccount(req, res)});
+
+router.route('/get-ledger').get(function(req, res) {rf.getLedger(req, res)});
+
+router.route('/add-ledger').post(function(req, res) {rf.addLedger(req, res)});
+
 router.route('/logout').get(function(req, res) {rf.logout(req, res)});
 
 module.exports = router;

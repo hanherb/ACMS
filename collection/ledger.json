@@ -1,0 +1,6 @@
+{"_id":{"$oid":"5c6d4a0b13f2fe0d68584e46"},"account_name":"Kas","detail":"Modal Awal","date":"20 February 2019 @ 19:37:29","debit":100000000,"credit":0,"balance":100000000}
+{"_id":{"$oid":"5c6d4a2213f2fe0d68584e49"},"account_name":"Kendaraan","detail":"Pengadaan Mobil Kantor","date":"20 February 2019 @ 19:37:52","debit":80000000,"credit":0,"balance":80000000}
+{"_id":{"$oid":"5c6d4a3913f2fe0d68584e4c"},"account_name":"Kas","detail":"Pengadaan Mobil Kantor","date":"20 February 2019 @ 19:38:15","debit":0,"credit":80000000,"balance":20000000}
+{"_id":{"$oid":"5c6d4a5313f2fe0d68584e4f"},"account_name":"Kas","detail":"Hasil Penjualan","date":"20 February 2019 @ 19:38:41","debit":55000000,"credit":0,"balance":75000000}
+{"_id":{"$oid":"5c6d4a6a13f2fe0d68584e52"},"account_name":"Kas","detail":"Beban Listrik","date":"20 February 2019 @ 19:39:4","debit":0,"credit":500000,"balance":74500000}
+{"_id":{"$oid":"5c6d4abd13f2fe0d68584e55"},"account_name":"Kas","detail":"Biaya Promosi","date":"20 February 2019 @ 19:40:26","debit":0,"credit":4000000,"balance":70500000}

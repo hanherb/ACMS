@@ -6,6 +6,7 @@ var blogGraphql = require('../plugin/blog/blog-graphql');
 var commerceGraphql = require('../plugin/commerce/commerce-graphql');
 var consultGraphql = require('../plugin/consult/consult-graphql');
 var supplyGraphql = require('../plugin/supply/supply-graphql');
+var accountGraphql = require('../plugin/account/account-graphql');
 
 var defaultSchema = buildSchema(`
 	type Query {
@@ -78,6 +79,7 @@ schemas.push(blogGraphql.schema);
 schemas.push(commerceGraphql.schema);
 schemas.push(consultGraphql.schema);
 schemas.push(supplyGraphql.schema);
+schemas.push(accountGraphql.schema);
 
 exports.schema = mergeSchema.mergeSchemas({
   schemas: schemas
@@ -230,6 +232,11 @@ exports.root = {
 	supply: supplyGraphql.root.supply,
 	supplies: supplyGraphql.root.supplies,
 
+	account: accountGraphql.root.account,
+	accounts: accountGraphql.root.accounts,
+	ledger: accountGraphql.root.ledger,
+	ledgers: accountGraphql.root.ledgers,
+
 	updateUser: updateUserFunction,
 	createUser: createUserFunction,
 	deleteUser: deleteUserFunction,
@@ -254,5 +261,12 @@ exports.root = {
 	
 	updateSupply: supplyGraphql.root.updateSupply,
 	createSupply: supplyGraphql.root.createSupply,
-	deleteSupply: supplyGraphql.root.deleteSupply
+	deleteSupply: supplyGraphql.root.deleteSupply,
+
+	updateAccount: accountGraphql.root.updateAccount,
+	createAccount: accountGraphql.root.createAccount,
+	deleteAccount: accountGraphql.root.deleteAccount,
+	updateLedger: accountGraphql.root.updateLedger,
+	createLedger: accountGraphql.root.createLedger,
+	deleteLedger: accountGraphql.root.deleteLedger
 };
