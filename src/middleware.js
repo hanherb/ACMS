@@ -74,10 +74,51 @@ function logger(req, res, next) {
 	}
 }
 
+function authorityFilter(req, res, next) {
+	let userAuthority = req.headers.user_authority.split(",");
+	if(req.path.split('-')[0] == '/get') {
+		let authorityType = req.path.split('-')[1];
+
+		if(authorityType == 'transaction') {
+			authorityType = 'commerce';
+		}
+
+		if(authorityType == 'user') {
+			authorityType = 'create';
+		}
+
+		if(authorityType == 'plugin') {
+			return true;
+		}
+
+		if(authorityType == 'role') {
+			return true;
+		}
+
+		for(let i = 0; i <= userAuthority.length; i++) {
+			if(i == userAuthority.length) {
+				return false;
+			}
+			else {
+				if(authorityType == userAuthority[i]) {
+					return true;
+					break;
+				}
+			}
+		}
+	}
+
+	else {
+		return true;
+	}
+}
+
 exports.beforeEndPoint = function(req, res, next) {
-	if(req.path != '/login-user' && req.path != '/register-user') {
+	if(req.path != '/login-user' && req.path != '/register-user' && req.path != '/logout') {
 		// console.log("authorization headers: " + req.headers.authorization);
 		// console.log("user session headers: " + req.headers.user_session);
+		// console.log("authority headers: " + req.headers.user_authority);
+		// console.log("headers: " + JSON.stringify(req.headers));
 		const bearerHeader = req.headers['authorization'];
 		if(typeof bearerHeader !== 'undefined') {
 			const bearer = bearerHeader.split(' ');
@@ -89,7 +130,13 @@ exports.beforeEndPoint = function(req, res, next) {
 					res.sendStatus(403);
 				}
 				else {
-					logger(req, res, next);
+					let authority = authorityFilter(req, res, next);
+					if(authority) {
+						logger(req, res, next);
+					}
+					else {
+						res.sendStatus(403);
+					}
 				}
 			});
 		}

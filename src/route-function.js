@@ -201,8 +201,5 @@ exports.addLedger = function(req, res) {
 }
 
 exports.logout = function(req, res) {
-	res.clearCookie("jwtToken");
-	req.session.destroy(function() {
-		res.redirect('/');
-	});
+	res.json(1);
 }
