@@ -95,6 +95,10 @@ function authorityFilter(req, res, next) {
 			return true;
 		}
 
+		if(authorityType == 'log') {
+			return true;
+		}
+
 		for(let i = 0; i <= userAuthority.length; i++) {
 			if(i == userAuthority.length) {
 				return false;
