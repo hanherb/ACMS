@@ -16,9 +16,9 @@ var address = 'http://141.136.47.202';
 app.use(cors());
 
 app.use('/graphql', cors(), express_graphql({
-	schema: graphvar.schema,
-	rootValue: graphvar.root,
-	graphiql: true
+  schema: graphvar.schema,
+  rootValue: graphvar.root,
+  graphiql: true
 }));
 
 app.use(bodyParser.json());
@@ -43,7 +43,7 @@ app.use(express.static(__dirname + '/plugin',{ redirect : false }));
 
 var server = app.listen(3000, function () {
   var port = server.address().port;
-	var address = server.address().address;
+  var address = server.address().address;
 
-  	console.log('App listening at port:', address + port);
+    console.log('App listening at port:', address + port);
 });

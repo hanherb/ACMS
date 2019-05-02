@@ -84,7 +84,7 @@ function authorityFilter(req, res, next) {
 		}
 
 		if(authorityType == 'user') {
-			authorityType = 'create';
+			return true;
 		}
 
 		if(authorityType == 'plugin') {
@@ -118,7 +118,7 @@ function authorityFilter(req, res, next) {
 }
 
 exports.beforeEndPoint = function(req, res, next) {
-	if(req.path != '/login-user' && req.path != '/register-user' && req.path != '/logout') {
+	if(req.path != '/login-user' && req.path != '/register-user' && req.path != '/get-role' && req.path != '/get-plugin' && req.path != '/logout') {
 		// console.log("authorization headers: " + req.headers.authorization);
 		// console.log("user session headers: " + req.headers.user_session);
 		// console.log("authority headers: " + req.headers.user_authority);

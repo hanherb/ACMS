@@ -1,18 +1,9 @@
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
-// var mongourl = 'mongodb://localhost:27017/';
-var TortoiseDB = require('tortoisedb');
-
-const torApp = new TortoiseDB({
-	name: 'acms',
-	port: 4000,
-	mongoURI: 'mongodb://localhost:27017',
-	batchLimit: 1000
-});
-torApp.start();
+var mongourl = 'mongodb://localhost:27017/';
 
 exports.mongoUser = function(action, query, callback) {
-	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+	MongoClient.connect(mongourl, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -76,7 +67,7 @@ exports.mongoUser = function(action, query, callback) {
 }
 
 exports.mongoRole = function(action, query, callback) {
-	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+	MongoClient.connect(mongourl, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -96,7 +87,7 @@ exports.mongoRole = function(action, query, callback) {
 }
 
 exports.mongoPlugin = function(action, query, callback) {
-	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+	MongoClient.connect(mongourl, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -124,7 +115,7 @@ exports.mongoPlugin = function(action, query, callback) {
 }
 
 exports.mongoBlog = function(action, query, callback) {
-	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+	MongoClient.connect(mongourl, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -168,7 +159,7 @@ exports.mongoBlog = function(action, query, callback) {
 }
 
 exports.mongoCommerce = function(action, query, callback) {
-	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+	MongoClient.connect(mongourl, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -212,7 +203,7 @@ exports.mongoCommerce = function(action, query, callback) {
 }
 
 exports.mongoTransaction = function(action, query, callback) {
-	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+	MongoClient.connect(mongourl, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -256,7 +247,7 @@ exports.mongoTransaction = function(action, query, callback) {
 }
 
 exports.mongoConsult = function(action, query, callback) {
-	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+	MongoClient.connect(mongourl, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -300,7 +291,7 @@ exports.mongoConsult = function(action, query, callback) {
 }
 
 exports.mongoSupply = function(action, query, callback) {
-	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+	MongoClient.connect(mongourl, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -344,7 +335,7 @@ exports.mongoSupply = function(action, query, callback) {
 }
 
 exports.mongoLogger = function(action, query, callback) {
-	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+	MongoClient.connect(mongourl, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -388,7 +379,7 @@ exports.mongoLogger = function(action, query, callback) {
 }
 
 exports.mongoAccount = function(action, query, callback) {
-	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+	MongoClient.connect(mongourl, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
@@ -432,7 +423,7 @@ exports.mongoAccount = function(action, query, callback) {
 }
 
 exports.mongoLedger = function(action, query, callback) {
-	MongoClient.connect(torApp.mongoShell._url, function(err, db) {
+	MongoClient.connect(mongourl, function(err, db) {
 		if(err) {
 			console.log("Error: ", err);
 		}
